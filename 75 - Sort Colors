@@ -1,0 +1,20 @@
+class Solution {
+public:
+    void sortColors(vector<int>& nums) {
+        int left = 0, right = nums.size() - 1;
+        while(nums[left] == 0 && left <= right) left++;
+        while(nums[right] == 2 && left <= right) right--;
+        if(left > right) return;    //has no 1's
+        int tmp = left;
+        while(tmp <= right){
+            if(nums[tmp] == 0){
+				if(left == tmp) tmp++;
+				else swap(nums[left], nums[tmp]);
+    	        left++;
+            }else if(nums[tmp] == 2){
+                swap(nums[right], nums[tmp]);
+                right--;
+            }else tmp++;
+        }
+    }
+};
