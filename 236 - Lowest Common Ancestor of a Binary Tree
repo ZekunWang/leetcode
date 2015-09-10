@@ -10,6 +10,11 @@
 class Solution {
 public:
     TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        //return solution1(root, p, q);
+        return solution2(root, p, q);
+        
+    }
+    TreeNode* solution1(TreeNode* root, TreeNode* p, TreeNode* q) {
         if(!root || !p || !p) return NULL;
         TreeNode *node1, *node2, *cur = NULL;
         
@@ -25,6 +30,15 @@ public:
         cur = stk->top();
 		delete stk; 
         return cur;
+    }
+    TreeNode* solution2(TreeNode *root, TreeNode *p, TreeNode *q){
+        if(!root) return NULL;
+        if(root == q || root == p) return root;
+        TreeNode *left = solution2(root->left, p, q);
+        TreeNode *right = solution2(root->right, p, q);
+        if(left && right) return root;
+        if(!left && !right) return NULL;
+        return left ? left : right;
     }
 private:
 	int getHeight(TreeNode *node){
