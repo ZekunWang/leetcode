@@ -1,0 +1,26 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int kthSmallest(TreeNode* root, int k) {
+        int count = 0;
+        return traversal(root, k, &count)->val;
+    }
+private:
+    TreeNode* traversal(TreeNode *root, int k, int *count){
+        if(!root) return NULL;
+        TreeNode *left, *right;
+        left = traversal(root->left, k, count);
+        if(*count == k) return left;
+        (*count)++;
+        if(*count == k) return root;
+        return traversal(root->right, k, count);
+    }
+};
