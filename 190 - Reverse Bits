@@ -1,0 +1,24 @@
+class Solution {
+public:
+    uint32_t reverseBits(uint32_t n) {
+        int count = 31;
+        //return solution1(n);    //iterative
+        return solution2(n, count);    //recursive
+    }
+private:
+    uint32_t solution1(uint32_t n){
+        int count = 32;
+        int num = 0;
+        while(n){
+            num <<= 1;
+            num |= n & 1;
+            n >>= 1;
+            count--;
+        }
+        return num << count;
+    }
+    uint32_t solution2(uint32_t n, int count){
+        if(!n) return 0;
+        return ((n & 1) << count) + solution2(n >> 1, count-1);
+    }
+};
