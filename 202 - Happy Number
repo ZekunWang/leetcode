@@ -1,0 +1,32 @@
+class Solution {
+public:
+    bool isHappy(int n) {
+        unordered_set<int> v;
+        //return solution1(&v, n);
+        return solution2(n);
+    }
+private:
+    bool solution1(unordered_set<int> *v, int n){
+        if(!n) return false;
+        if(n == 1) return true;
+        if(v->find(n) != v->end()) return false;
+        v->insert(n);
+        return solution1(v, sumDigits(n));
+    }
+    int sumDigits(int n){
+        int sum = 0, dig = 0;
+        while(n){
+            dig = n % 10;
+            sum += dig * dig;
+            n = n / 10;
+        }
+        return sum;
+    }
+    bool solution2(int n){
+        if(!n) return false;
+        if(n == 1) return true;
+        if(n==4 || n==16 || n==20 || n==37 || n==42 || n==58 || n==89 || n==145)
+            return false;
+        return solution2(sumDigits(n));
+    }
+};
