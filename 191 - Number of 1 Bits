@@ -1,0 +1,29 @@
+class Solution {
+public:
+    int hammingWeight(uint32_t n) {
+        //return solution1(n);    //iterative
+        return solution2(n);    //recursive
+        //return solution3(n);
+    }
+private:
+    int solution1(uint32_t n){
+        int count;
+        while(n){
+            if(n & 1) count++;
+            n = n >> 1;
+        }
+        return count;
+    }
+    int solution2(uint32_t n){
+        if(!n) return 0;
+        return (n & 1) + solution2(n>>1);
+    }
+    int solution3(uint32_t n) {
+        int res =0;
+        while (n){
+            n = n & (n-1);
+            res++;
+        }
+        return res;
+    }
+};
