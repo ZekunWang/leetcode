@@ -1,0 +1,19 @@
+class Solution {
+public:
+    int rob(vector<int>& nums) {
+        return solution1(nums);
+    }
+private:
+    int solution1(vector<int> &nums){
+        int sz = nums.size();
+        if(!sz) return 0;
+        int large, small, tmp;
+        large = small = tmp = 0;
+        for(int i = 0; i < sz; i++){
+            tmp = max(small + nums[i], large);
+            small = large;
+            large = tmp;
+        }
+        return large;
+    }
+};
