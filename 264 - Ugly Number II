@@ -1,0 +1,49 @@
+class Solution {
+public:
+    int nthUglyNumber(int n) {
+        //return solution1(n);  //3 queues
+        return solution2(n);    //1 vector
+    }
+private:
+    int solution1(int n){
+        if(n == 1) return 1;
+        int elem[3] = {2, 3, 5};
+        if(n < 4) return elem[n-2];
+        queue<int> q[3];
+        for(int i = 0; i < 3; i++)
+            q[i].push(elem[i]);
+        int cur[3] = {2, 3, 5};
+        int tmp;
+        for(int i = 2; i <= n; i++){
+            tmp = cur[0] > cur[1] ? 1 : 0;
+            tmp = cur[tmp] > cur[2] ? 2 : tmp; //queue that has smallest number
+            if(i == n) return cur[tmp];
+            if(i + q[0].size() + q[1].size() + q[2].size() < 2 * n){
+                for(int j = tmp; j < 3; j++){
+                    if(q[j].back() != 2147483647)
+                        q[j].push(elem[j] * cur[tmp]);
+                }
+            }
+            q[tmp].pop();
+            cur[tmp] = q[tmp].front();
+            cur[tmp] = cur[tmp] > 0 ? cur[tmp] : 2147483647;
+        }
+    }
+    int solution2(int n){
+        int i, j, k, m, cur2,cur3,cur5;
+        i = j = k = 0;
+        vector<int> v;
+        v.push_back(1);
+        while(v.size() != n){
+            cur2 = v[i] * 2;
+            cur3 = v[j] * 3;
+            cur5 = v[k] * 5;
+            m = min(cur5, min(cur3, cur2));
+            if(m == cur2) i++;
+            if(m == cur3) j++;
+            if(m == cur5) k++;
+            v.push_back(m);
+        }
+        return v.back();
+    }
+};
