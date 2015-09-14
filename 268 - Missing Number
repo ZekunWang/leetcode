@@ -1,0 +1,35 @@
+class Solution {
+public:
+    int missingNumber(vector<int>& nums) {
+        //return solution1(nums);
+        //return solution2(nums);
+        return solution3(nums);
+    }
+private:
+    int solution1(vector<int>& nums) {
+        int sz = nums.size(), i;
+        bool *a = new bool[sz];
+        memset(a, 1, sz);
+        for(i = 0; i < sz; i++){
+            if(nums[i] < sz) a[nums[i]] = 0;
+        }
+        for(i = 0; i < sz; i++)
+            if(a[i]) break;
+        delete a;
+        return i;
+    }
+    int solution2(vector<int>& nums){
+        int sz = nums.size(), sum = 0;
+        for(int i = 0; i < sz; i++)
+            sum += nums[i];
+        return sz * (sz + 1) / 2 - sum;
+    }
+    int solution3(vector<int>& nums){
+        int sz = nums.size(), result = sz;
+        for(int i = 0; i < sz; i++){
+            result ^= i;
+            result ^= nums[i];
+        }
+        return result;
+    }
+};
