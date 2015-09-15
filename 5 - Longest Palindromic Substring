@@ -1,0 +1,27 @@
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        return solution1(s);
+    }
+private:
+    int lo = 0, maxlen = 0;
+    string solution1(string s){
+        int len = s.length();
+        if(len < 2) return s;
+        for(int i = 0; i < len - (maxlen+1)/2; i++){
+            find(s, len, i - 1, i + 1); //for odd string
+            find(s, len, i, i + 1); //for even string
+        }
+        return s.substr(lo,maxlen);
+    }
+    void find(string s, int len, int left, int right){
+        while(left >= 0 && right < len && s[left] == s[right]){
+            left--;
+            right++;
+        }
+        if(right - left - 1 > maxlen){
+            lo = left + 1;
+            maxlen = right - left - 1;
+        }
+    }
+};
