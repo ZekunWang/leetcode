@@ -1,0 +1,50 @@
+class Solution {
+public:
+    string convert(string s, int numRows) {
+        //return solution1(s, numRows);
+        return solution2(s, numRows);
+    }
+private:
+    string solution1(string s, int numRows){
+        int len = s.length();
+        if(numRows == 1 || len <= numRows) return s;
+        bool *addTwice = new bool[numRows];
+        memset(addTwice, true, numRows);
+        addTwice[0] = addTwice[numRows - 1] = false; //add once for 1st and last row
+        string newstr;
+        int step = 2 * (numRows - 1), cur = numRows - 1, first, second;
+        for(int i = 0; i < numRows; i++){
+            while(1){
+                first = cur - numRows + 1 + i;
+                if(first >= len) break;
+                newstr.append(1, s[first]);
+                if(addTwice[i]){
+                    second = cur + numRows - 1 - i;
+                    if(second < len)
+                        newstr.append(1, s[second]);
+                } 
+                cur += step;
+            }
+            cur = numRows - 1;
+        }
+        delete addTwice;
+        return newstr;
+    }
+    string solution2(string s, int numRows){
+        int len = s.length();
+        if(numRows == 1 || len <= numRows) return s;
+        string newstr;
+        int step1 = 2 * (numRows - 1), step2, first, second;
+        for(int i = 0; i < numRows; i++){
+            step2 = 2*(numRows-i-1);
+            for(first = i; first < len; first += step1){
+                newstr.append(1, s[first]);
+                second = first + step2;
+                if(i != 0 && i != numRows-1 && second < len){
+                    newstr.append(1, s[second]);
+                }
+            }
+        }
+        return newstr;
+    }
+};
