@@ -1,0 +1,17 @@
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+        return solution1(height);
+    }
+private:
+    int solution1(vector<int> &height){
+        int area(0), lo(0), hi(height.size() - 1), m;
+        while(lo < hi){
+            m = min(height[hi], height[lo]);
+            area = max(area, (hi - lo) * m);
+            while(height[lo] <= m && lo < hi) lo++;
+            while(height[hi] <= m && lo < hi) hi--;
+        }
+        return area;
+    }
+};
