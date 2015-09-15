@@ -1,7 +1,8 @@
 class Solution {
 public:
     bool isValid(string s) {
-        return solution1(s);
+        //return solution1(s);
+        return solution2(s);
     }
 private:
     bool solution1(string s){
@@ -18,6 +19,21 @@ private:
                 st.push(s[i]);
             else{
                 if(m[s[i]] != st.top()) return false;
+                st.pop();
+            }
+        }
+        return st.empty() ? true : false;
+    }
+    bool solution2(string s){
+        if(s == "") return true;
+        if(s[0] == ')' || s[0] == ']' || s[0] == '}') return false;
+        if(s.length() % 2 != 0) return false;
+        stack<char> st;
+        for(int i = 0; i < s.length(); i++){
+            if(s[i] == '(' || s[i] == '{' || s[i] == '[')
+                st.push(s[i]);
+            else{
+                if(s[i] != st.top()+1 && s[i] != st.top()+2) return false;
                 st.pop();
             }
         }
