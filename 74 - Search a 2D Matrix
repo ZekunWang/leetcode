@@ -23,6 +23,7 @@ private:
     bool solution2(vector<vector<int>> &matrix, int target){
         int sz = matrix.size();
         if(sz == 0) return false;
+        //target too small or too large
         if(matrix[0][0] > target || matrix.back().back() < target) return false;
         for(int i = 0; i < sz; i++){
             if(matrix[i].back() >= target) return bSearch(matrix[i], 0, matrix[i].size() / 2, matrix[i].size(), target);
