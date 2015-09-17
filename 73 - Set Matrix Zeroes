@@ -1,0 +1,111 @@
+class Solution {
+public:
+    void setZeroes(vector<vector<int>>& matrix) {
+        //solution1(matrix);
+        //solution2(matrix);
+        solution3(matrix);
+    }
+private:
+    void solution1(vector<vector<int>> &matrix){
+        int m = matrix.size();
+        if(m < 1) return;
+        int n = matrix[0].size();
+        int row = -1, col = -1, i, j;
+        for(i = 0; i < m; i++){
+            for(j = 0; j < n; j++){
+                if(matrix[i][j] == 0){
+                    if(row == -1){
+                        row = i;
+                        col = j;
+                    }else{
+                        matrix[i][col] = 0;
+                        matrix[row][j] = 0;
+                    }
+                }
+            }
+        }
+        if(row == -1) return;
+        for(i = 0; i < m; i++){
+            if(i == row) continue;
+            if(matrix[i][col] == 0)
+                for(j = 0; j < n; j++)
+                    matrix[i][j] = 0;
+        }
+        for(j = 0; j < n; j++){
+            if(j == col) continue;
+            if(matrix[row][j] == 0)
+                for(i = 0; i < m; i++)
+                    matrix[i][j] = 0;
+        }
+        for(i = 0; i < m; i++) matrix[i][col] = 0;
+        for(j = 0; j < n; j++) matrix[row][j] = 0;
+    }
+    void solution2(vector<vector<int>> &matrix){
+        int m = matrix.size();
+        if(m < 1) return;
+        int n = matrix[0].size();
+        int row = -1, col = -1, i, j;
+        for(i = 0; i < m; i++){
+            for(j = 0; j < n; j++){
+                if(matrix[i][j] == 0){
+                    row = i;
+                    col = j;
+                    break;
+                }
+            }
+            if(row != -1) break;
+        }
+        if(row == -1) return;
+        for(i = row; i < m; i++){
+            for(j = 0; j < n; j++){
+                if(matrix[i][j] == 0){
+                    matrix[i][col] = 0;
+                    matrix[row][j] = 0;
+                }
+            }
+        }
+        for(i = 0; i < m; i++){
+            if(i == row) continue;
+            if(matrix[i][col] == 0)
+                for(j = 0; j < n; j++)
+                    matrix[i][j] = 0;
+        }
+        for(j = 0; j < n; j++){
+            if(j == col) continue;
+            if(matrix[row][j] == 0)
+                for(i = 0; i < m; i++)
+                    matrix[i][j] = 0;
+        }
+        for(i = 0; i < m; i++) matrix[i][col] = 0;
+        for(j = 0; j < n; j++) matrix[row][j] = 0;
+    }
+    void solution3(vector<vector<int>> &matrix){        //use 2 sets
+        int m = matrix.size();
+        if(m < 1) return;
+        int n = matrix[0].size();
+        set<int> rset, cset;
+        int row = -1, col = -1, i, j;
+        bool newRow = false;
+        for(i = 0; i < m; i++){
+            for(j = 0; j < n; j++){
+                if(matrix[i][j] == 0){
+                    if(newRow == false) newRow = true;
+                    if(cset.find(j) == cset.end()) cset.insert(j);
+                }
+            }
+            if(newRow){
+                rset.insert(i);
+                newRow = false;
+            }
+        }
+        if(rset.size() == 0) return;
+        for(set<int>::iterator ir = rset.begin(); ir != rset.end(); ir++){
+            for(j = 0; j < n; j++)
+                matrix[*ir][j] = 0;
+        }
+        for(set<int>::iterator ic = cset.begin(); ic != cset.end(); ic++){
+            for(i = 0; i < m; i++)
+                matrix[i][*ic] = 0;
+        }
+    }
+};
