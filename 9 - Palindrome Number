@@ -2,7 +2,8 @@ class Solution {
 public:
     bool isPalindrome(int x) {
         //return solution1(x);  //no extra space but runtime not stable
-        return solution2(x);    //with int's but runtime stable
+        //return solution2(x);    //with int's but runtime stable
+        return solution3(x);    //with int's but runtime stable
     }
 private:
     bool solution1(int x){
@@ -22,6 +23,20 @@ private:
         int right = 1;
         dig /= 2;
         for(int i = 1; i <= dig; i++){
+            if((x / left) % 10 != (x / right) % 10)
+                return false;
+            left /= 10;
+            right *= 10;
+        }
+        return true;
+    }
+    bool solution3(int x){
+        if(x < 0) return false;
+        if(x / 10 == 0) return true;
+        int left = 10;
+        while(x/left >= 10) left *= 10;
+        int right = 1;
+        while(left > right){
             if((x / left) % 10 != (x / right) % 10)
                 return false;
             left /= 10;
