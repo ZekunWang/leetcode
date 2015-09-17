@@ -1,0 +1,50 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool isSameTree(TreeNode* p, TreeNode* q) {
+        //return solution1(p, q);     //DFS
+        return solution2(p, q);     //BFS
+    }
+private:
+    bool solution1(TreeNode *p, TreeNode *q){
+        if(!p && !q) return true;   //both NULL
+        if((p && !q) || (!p && q)) return false; //either one is NULL
+        if(p->val != q->val) return false;  //check current node
+        if(!solution1(p->left, q->left)) return false;  //return false if left check fails
+        return solution1(p->right, q->right);   //check right if left check succeeds
+    }
+    bool solution2(TreeNode *p, TreeNode *q){
+        if(!p && !q) return true;
+        if((p && !q) || (!p && q)) return false; //either one is NULL
+        queue<TreeNode *> quep, queq;
+        quep.push(p);
+        queq.push(q);
+        TreeNode *pfront, *qfront;
+        while(!quep.empty() && !queq.empty()){
+            pfront = quep.front();
+            qfront = queq.front();
+            if(pfront->val != qfront->val) return false;
+            if((!pfront->left && qfront->left) || (pfront->left && !qfront->left)) return false;
+            if(pfront->left != qfront->left){
+                quep.push(pfront->left);
+                queq.push(qfront->left);
+            }
+            if((!pfront->right && qfront->right) || (pfront->right && !qfront->right)) return false;
+            if(pfront->right != qfront->right){
+                quep.push(qfront->right);
+                queq.push(pfront->right);
+            }
+            quep.pop();
+            queq.pop();
+        }
+        return quep.size() == queq.size();
+    }
+};
