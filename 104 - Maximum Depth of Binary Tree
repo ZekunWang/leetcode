@@ -10,8 +10,8 @@
 class Solution {
 public:
     int maxDepth(TreeNode* root) {
-        //return solution1(root);   //DFS search
-        return solution2(root);     //BFS search
+        //return solution1(root);   //DFS
+        return solution2(root);     //BFS
     }
 private:
     int solution1(TreeNode* root) {
