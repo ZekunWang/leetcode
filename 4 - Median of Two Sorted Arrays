@@ -21,11 +21,11 @@ public:
 			tmp = &nums1;
 		else
 			tmp = &nums2;
-		if(tot % 2 == 0 && count == mid1)
-			r1 = tmp->front();
-		else if(count == mid2)
-			r2 = tmp->front();
-		tmp->erase(tmp->begin());
+	    if(tot % 2 == 0 && count == mid1)
+		r1 = tmp->front();
+	    else if(count == mid2)
+		r2 = tmp->front();
+	    tmp->erase(tmp->begin());
 	}
 	result = r1 + r2;
 	if(tot%2 == 0) result = result / 2;
