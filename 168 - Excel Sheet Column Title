@@ -1,0 +1,40 @@
+/*
+Given a positive integer, return its corresponding column title as appear in an Excel sheet.
+
+For example:
+
+    1 -> A
+    2 -> B
+    3 -> C
+    ...
+    26 -> Z
+    27 -> AA
+    28 -> AB 
+*/
+
+class Solution {
+public:
+    string convertToTitle(int n) {
+        //return solution1(n);    //recursive
+        return solution2(n);    //iterative
+    }
+private:
+    string solution1(int n){
+        string s;
+        if(!n) return s;
+        int rem = (n - 1) % 26 + 1;
+        s = solution1((n - rem) / 26) + (char)(rem + 64);
+        return s;
+    }
+    string solution2(int n){
+        string s;
+        if(!n) return s;
+        int rem;
+        while(n){
+            rem = (n - 1) % 26 + 1;
+            s.insert(s.begin(), (char)(rem + 64));
+            n = (n - rem) / 26;
+        }
+        return s;
+    }
+};
