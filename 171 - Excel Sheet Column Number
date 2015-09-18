@@ -1,0 +1,31 @@
+/*
+Given a column title as appear in an Excel sheet, return its corresponding column number.
+
+For example:
+
+    A -> 1
+    B -> 2
+    C -> 3
+    ...
+    Z -> 26
+    AA -> 27
+    AB -> 28 
+*/
+class Solution {
+public:
+    int titleToNumber(string s) {
+        return solution1(s, s.length() - 1);    //recursive
+        //return solution2(s);    //iterative
+    }
+private:
+    int solution1(string s, int pos){
+        if(pos < 0) return 0;
+        return s[pos] - '@' + 26 * solution1(s, pos - 1);
+    }
+    int solution2(string s){
+        int sum = s[0] - '@';
+        for(int i = 1; i < s.length(); i++)
+            sum = sum * 26 + s[i] - '@';
+        return sum;
+    }
+};
