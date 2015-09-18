@@ -1,0 +1,43 @@
+class Solution {
+public:
+    bool containsDuplicate(vector<int>& nums) {
+        //return solution1(nums);
+        return solution2(nums);
+    }
+private:
+    bool solution1(vector<int> &nums){
+        int sz = nums.size();
+        if(!sz || sz == 1) return false;
+        unordered_set<int> s;
+        for(int i = 0; i < sz; i++)
+            s.insert(nums[i]);
+        return s.size() != sz;
+    }
+    bool solution2(vector<int> &nums){
+        int sz = nums.size();
+        if(!sz || sz == 1) return false;
+        bitSort(nums, 0, sz - 1, 1);
+        for(int i = 0; i < sz - 1; i++)
+            if(nums[i] == nums[i+1]) return true;
+        return false;
+    }
+    void bitSort(vector<int> &nums, int lo, int hi, int dig){
+        if(lo >= hi) return;
+        int tmpl = lo, tmph = hi;
+        while(tmpl < tmph){
+            while(tmpl < hi && !(nums[tmpl] & dig)) tmpl++;
+            while(tmph > lo && (nums[tmph] & dig)) tmph--;
+            if(tmpl >= tmph) break;
+            swap(nums, tmpl, tmph);
+        }
+    //search left
+        if(tmpl <= hi) bitSort(nums, lo, tmpl - 1, dig * 2);
+    //search right
+        if(tmph >= lo) bitSort(nums, tmph + 1, hi, dig * 2);
+    }
+    void swap(vector<int> &nums, int a, int b){
+        nums[a] ^= nums[b];
+        nums[b] ^= nums[a];
+        nums[a] ^= nums[b];
+    }
+};
