@@ -1,0 +1,73 @@
+/*
+Given a binary tree, check whether it is a mirror of itself (ie, symmetric around its center).
+
+For example, this binary tree is symmetric:
+
+    1
+   / \
+  2   2
+ / \ / \
+3  4 4  3
+But the following is not:
+    1
+   / \
+  2   2
+   \   \
+   3    3
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool isSymmetric(TreeNode* root) {
+        //return solution1(root);     //recursive DFS
+        return solution2(root);     //iterative BFS
+    }
+private:
+    bool solution1(TreeNode *root){
+        if(!root) return true;
+        return subSol1(root->left, root->right);
+    }
+    bool subSol1(TreeNode *left, TreeNode *right){
+        if(!left && !right) return true;
+        if(!left || !right) return false;
+        if(left->val != right->val) return false;
+        return subSol1(left->left, right->right) && subSol1(left->right, right->left);
+    }
+    bool solution2(TreeNode *root){
+        if(!root) return true;
+        if(!root->left && !root->right) return true;
+        if(!root->left || !root->right) return false;
+        queue<TreeNode *> q;
+        q.push(root->left);
+        q.push(root->right);
+        TreeNode *left, *right;
+        while(!q.empty()){
+            if(q.size() % 2 == 1) return false;
+            left = q.front();
+            q.pop();
+            right = q.front();
+            q.pop();
+            if(left->val != right->val) return false;
+            if((!left->left && right->right) || (left->left && !right->right)) return false;
+            if((!left->right && right->left) || (left->right && !right->left)) return false;
+            if(left->left && right->right){
+                q.push(left->left);
+                q.push(right->right);
+            }
+            if(left->right && right->left){
+                q.push(left->right);
+                q.push(right->left);
+            }
+        }
+        return true;
+    }
+};
