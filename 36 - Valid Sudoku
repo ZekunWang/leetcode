@@ -1,0 +1,67 @@
+/*
+Determine if a Sudoku is valid, according to Sudoku Puzzles Rules.
+The Sudoku board could be partially filled, where empty cells are filled with the character '.'.
+A partially filled sudoku which is valid.
+
+Note:
+A valid Sudoku board (partially filled) is not necessarily solvable. Only the filled cells need to be validated.
+*/
+
+class Solution {
+public:
+    bool isValidSudoku(vector<vector<char>>& board) {
+        return solution1(board);    //less lines
+        //return solution2(board);    //clear structure
+    }
+private:
+    int16_t tmp;
+    bool solution1(vector<vector<char>>& board) {
+        int16_t col[9] = {}, row[9] = {}, sqr[9] = {};
+        for(int i = 0; i < 9; i++){
+            for(int j = 0; j < 9; j++){
+                if(board[i][j] != '.'){
+                    int n = 1 << (board[i][j] - '1'), sq = (i/3)*3 + j/3;
+                    if(row[i] & n || col[j] & n || sqr[sq] & n) return false;
+                    row[i] |= n;
+                    col[j] |= n;
+                    sqr[sq] |= n;
+                }
+            } 
+        }
+        return true;
+    }
+    bool solution2(vector<vector<char>>& board) {
+        for(int i = 0; i < 9; i++)
+            if(!checkRow(board, i) || !checkCol(board, i) || !checkSqr(board, (i/3)*3, (i%3)*3))
+                return false;
+        return true;
+    }
+    bool checkRow(vector<vector<char>> &board, int row){
+        for(int i = 0; i < 9; i++)
+            if(board[row][i] != '.')
+                if(!checkNode(board[row][i])) return false;
+        tmp = 0;
+        return true;
+    }
+    bool checkCol(vector<vector<char>> &board, int col){
+        for(int i = 0; i < 9; i++)
+            if(board[i][col] != '.')
+                if(!checkNode(board[i][col])) return false;
+        tmp = 0;
+        return true;
+    }
+    bool checkSqr(vector<vector<char>> &board, int row, int col){
+        for(int i = 0; i < 3; i++)
+            for(int j = 0; j < 3; j++)
+                if(board[row + i][col + j] != '.')
+                    if(!checkNode(board[row + i][col + j])) return false;
+        tmp = 0;
+        return true;
+    }
+    bool checkNode(char ch){
+        int n = 1 << (ch - '1');
+        if(tmp & n) return false;
+        tmp |= n;
+        return true;
+    }
+};
