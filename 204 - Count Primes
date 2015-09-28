@@ -1,0 +1,26 @@
+/*
+Count the number of prime numbers less than a non-negative number, n.
+*/
+
+class Solution {
+public:
+    int countPrimes(int n) {
+        return solution1(n);
+    }
+private:
+    int solution1(int n){
+        if(n <= 4) return max(n - 2, 0);
+        bool *tmp = new bool[n];
+        memset(tmp, true, n);
+        int count(1), sz(sqrt(n));
+        for(int i = 3; i <= sz; i += 2){
+            if(!tmp[i]) continue;
+            for(int j = 3, k = j*i; k < n; j += 2, k = j * i)
+                tmp[k] = false;
+        }
+        for(int i = 3; i < n; i += 2)
+            if(tmp[i]) count++;
+        delete tmp;
+        return count;
+    }
+};
