@@ -1,0 +1,66 @@
+/*
+Given two strings s and t, determine if they are isomorphic.
+Two strings are isomorphic if the characters in s can be replaced to get t.
+
+All occurrences of a character must be replaced with another character while preserving the order of characters. 
+No two characters may map to the same character but a character may map to itself.
+
+For example,
+Given "egg", "add", return true.
+Given "foo", "bar", return false.
+Given "paper", "title", return true.
+
+Note:
+You may assume both s and t have the same length.
+*/
+
+class Solution {
+public:
+    bool isIsomorphic(string s, string t) {
+        return solution1(s, t);       //int array
+        //return solution2(s, t);       //unordered_map
+        //return solution3(s, t);       //vector
+    }
+private:
+    bool solution1(string s, string t){
+        int sz = s.length();
+        if(sz < 2) return true;
+        int cs[128], ct[128];
+        for(int i = 0; i < 128; i++)
+            cs[i] = ct[i] = -1;
+        for(int i = 0; i < sz; i++){
+            if(cs[s[i]] == -1 && ct[t[i]] == -1){
+                cs[s[i]] = t[i];
+                ct[t[i]] = s[i];
+            }
+            if(cs[s[i]] != t[i] || ct[t[i]] != s[i]) return false;
+        }
+        return true;
+    }
+    bool solution2(string s, string t){
+        unordered_map<char, char> ms, mt;
+        int sz = s.length();
+        for(int i = 0; i < sz; i++){
+            if(!ms[s[i]] && !mt[t[i]]){
+                ms[s[i]] = t[i];
+                mt[t[i]] = s[i];
+            }
+            if(ms[s[i]] != t[i] || mt[t[i]] != s[i]) return false;
+        }
+        return true;
+    }
+    bool solution3(string s, string t){
+        vector<char> vs, vt;
+        int sz = s.length();
+        for(int i = 0; i < sz; i++)
+            if(check3(vs, s[i]) != check3(vt, t[i])) return false;
+        return true;
+    }
+    int check3(vector<char> &v, char c){
+        for(int i = 0; i < v.size(); i++){
+            if(v[i] == c) return i;
+        }
+        v.push_back(c);
+        return -1;
+    }
+};
