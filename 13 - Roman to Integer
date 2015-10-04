@@ -1,0 +1,33 @@
+/*
+Given a roman numeral, convert it to an integer.
+
+Input is guaranteed to be within the range from 1 to 3999.
+*/
+
+class Solution {
+public:
+    int romanToInt(string s) {
+        int count(0), sz(s.length() - 1);
+        for(int i = 0; i < sz + 1; i++){
+            if(i < sz && (s[i] == 'I' && (s[i+1] == 'V' || s[i+1] == 'X'))
+            || (s[i] == 'X' && (s[i+1] == 'L' || s[i+1] == 'C'))
+            || (s[i] == 'C' && (s[i+1] == 'D' || s[i+1] == 'M')))
+                count -= rti(s[i]);
+            else count += rti(s[i]);
+        }
+        return count;
+    }
+private:
+    int rti(char c){
+        switch(c){
+            case 'I': return 1;
+            case 'V': return 5;
+            case 'X': return 10;
+            case 'L': return 50;
+            case 'C': return 100;
+            case 'D': return 500;
+            case 'M': return 1000;
+            default: 0;
+        }
+    }
+};
