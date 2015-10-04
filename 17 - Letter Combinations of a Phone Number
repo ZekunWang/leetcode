@@ -1,0 +1,29 @@
+/*
+Given a digit string, return all possible letter combinations that the number could represent.
+
+Input:Digit string "23"
+Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
+Note:
+Although the above answer is in lexicographical order, your answer could be in any order you want.
+*/
+
+class Solution {
+public:
+    vector<string> letterCombinations(string digits) {
+        vector<string> ch({"","","abc","def","ghi","jkl","mno","pqrs","tuv","wxyz"});
+        vector<string> v;
+        if(digits == "") return v;
+        solution1(digits, 0, digits.length(), "", v, ch);
+        return v;
+    }
+private:
+    void solution1(string &dgts, int pos, int len, string s, vector<string> &v, vector<string> &ch){
+        if(pos == len){
+            v.push_back(s);
+            return;
+        }
+        string &tmp = ch[dgts[pos] - '0'];
+        for(int i = 0; i < tmp.size(); i++)
+            solution1(dgts, pos + 1, len, s + tmp[i], v, ch);
+    }
+};
