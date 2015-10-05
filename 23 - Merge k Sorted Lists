@@ -1,0 +1,51 @@
+//Merge k sorted linked lists and return it as one sorted list. Analyze and describe its complexity.
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        int sz(lists.size()), i, j, pos, lo(0);
+        if(!sz) return NULL;
+        if(sz == 1) return lists[0];
+        ListNode *head = new ListNode(INT_MIN), *cur(head), *tmp(NULL);
+        while(1){
+            for(i = lo; i < sz; i++){
+                while(lists[i] && lists[i]->val == cur->val){   //add nodes equal to current node's val to new list
+                    cur->next = lists[i];
+                    cur = cur->next;
+                    lists[i] = lists[i]->next;
+                }
+                if(!lists[i]){                                  //find NULL node and move to left
+                    if(i != lo) swap(lists[i], lists[lo]);
+                    lo++;
+                }
+            }
+            if(lo == sz) break;  //all lists are NULL
+            if(lo == sz-1){      //last list not NULL, no need to merge any more
+                cur->next = lists[lo];
+                break;
+            }
+            tmp = lists[lo];    //take first non-NULL node as smallest node
+            pos = lo;
+            for(j = lo + 1; j < sz; j++){   //find smallest node
+                if(lists[j]->val < tmp->val){
+                    pos = j;
+                    tmp = lists[j];
+                }
+            }
+            cur->next = tmp;        //add smallest node to new list
+            cur = cur->next;
+            lists[pos] = lists[pos]->next;
+        }
+        tmp = head->next;
+        delete head;
+        return tmp;
+    }
+};
