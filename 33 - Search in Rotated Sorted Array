@@ -1,0 +1,33 @@
+/*
+Suppose a sorted array is rotated at some pivot unknown to you beforehand.
+
+(i.e., 0 1 2 4 5 6 7 might become 4 5 6 7 0 1 2).
+
+You are given a target value to search. If found in the array return its index, otherwise return -1.
+
+You may assume no duplicate exists in the array.
+*/
+
+class Solution {
+public:
+    int search(vector<int>& nums, int target) {
+        return solution1(nums, 0, nums.size() - 1, target);
+    }
+private:
+    int solution1(vector<int> &v, int lo, int hi, int tg){
+        int mid = (lo + hi) / 2, result;
+        if(v[mid] == tg) return mid;
+        if(v[lo] <= v[mid]) result = bst(v, lo, mid - 1, tg);
+        else result = solution1(v, lo, mid - 1, tg);
+        if(result != -1) return result;
+        if(v[mid] <= v[hi]) return bst(v, mid + 1, hi, tg);
+        else return solution1(v, mid + 1, hi, tg);
+    }
+    int bst(vector<int> &v, int lo, int hi, int tg){
+        if(lo > hi) return -1;
+        int mid = (lo + hi) / 2;
+        if(v[mid] == tg) return mid;
+        if(v[mid] < tg) return bst(v, mid + 1, hi, tg);
+        return bst(v, lo, mid - 1, tg);
+    }
+};
