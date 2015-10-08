@@ -1,0 +1,16 @@
+//Implement pow(x, n).
+
+class Solution {
+public:
+    double myPow(double x, int n) {
+        if(!n) return 1;
+        double r(x);
+        int count(abs(n) - 1);
+        while(count){
+            if(count & 1) r *= x;
+            x *= x;
+            count >>= 1;
+        }
+        return n > 0 ? r : 1 / r;
+    }
+};
