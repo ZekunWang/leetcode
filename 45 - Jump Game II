@@ -1,0 +1,39 @@
+/*
+Given an array of non-negative integers, you are initially positioned at the first index of the array.
+
+Each element in the array represents your maximum jump length at that position.
+
+Your goal is to reach the last index in the minimum number of jumps.
+
+For example:
+Given array A = [2,3,1,1,4]
+
+The minimum number of jumps to reach the last index is 2. (Jump 1 step from index 0 to 1, then 3 steps to the last index.)
+*/
+
+class Solution {
+public:
+    int jump(vector<int>& nums) {
+        return solution1(nums, nums.size() - 1);
+    }
+private:
+    int solution1(vector<int> v, int sz){
+        if(sz < 1) return 0;
+        int step(0), i(0), lo(1);
+        //step counts step, i is index with max val, lo avoids recalculation
+        while(i < sz){
+            if(i + v[i] >= sz) return step + 1; //i can reach last index
+            int val(0), bk(i + v[i]);
+            for(int j = lo; j <= bk; j++){
+                int cur(j + v[j]);
+                if(cur > val){      //get next i that has max val
+                    val = cur;
+                    i = j;
+                }
+            }
+            lo = bk + 1;
+            step++;
+        }
+        return step;
+    }
+};
