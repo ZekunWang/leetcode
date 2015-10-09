@@ -1,0 +1,25 @@
+//Given a binary tree, determine if it is a valid binary search tree (BST).
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool isValidBST(TreeNode* root) {
+        return solution1(root, (long)INT_MIN - 1, (long)INT_MAX + 1);
+    }
+private:
+    bool solution1(TreeNode *root, long lo, long hi){
+        if(!root) return true;
+        if( root->val <= lo || root->val >= hi) return false;
+        if(!solution1(root->left, lo, root->val)) return false;
+        if(!solution1(root->right, root->val, hi)) return false;
+        return true;
+    }
+};
