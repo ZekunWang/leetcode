@@ -1,0 +1,73 @@
+/*
+Write an efficient algorithm that searches for a value in an m x n matrix. This matrix has the following properties:
+
+Integers in each row are sorted in ascending from left to right.
+Integers in each column are sorted in ascending from top to bottom.
+For example, consider the following matrix:
+[
+  [1,   4,  7, 11, 15],
+  [2,   5,  8, 12, 19],
+  [3,   6,  9, 16, 22],
+  [10, 13, 14, 17, 24],
+  [18, 21, 23, 26, 30]
+]
+Given target = 5, return true; given target = 20, return false.
+*/
+
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+    //    return solution1(matrix, target);
+    //    return solution2(matrix, target);
+        return solution3(matrix, target);
+    }
+private:
+    bool solution1(vector<vector<int>> &v, int tg){
+        if(!v.size() || !v[0].size()) return false;
+        int row(v.size() - 1), col(v[0].size() - 1), r(0), c(0);
+        if(v[0][0] > tg || v[row][col] < tg) return false;
+        while(r <= row && c <= col && v[r][c] < tg){
+            r++;
+            c++;
+        } 
+        for(int i = r; i <= row; i++)
+            if(v[i][c - 1] >= tg && v[i][0] <= tg && checkRow(v[i], 0, c - 1, tg)) return true;
+        for(int i = 0; i <= row; i++)
+            if(v[i][col] >= tg && v[i][c] <= tg && checkRow(v[i], c, col, tg)) return true;
+        return false;
+    }
+    bool checkRow(vector<int> &v, int lo, int hi, int tg){
+        if(lo > hi) return false;
+        int mid((lo + hi) / 2);
+        if(v[mid] < tg) return checkRow(v, mid + 1, hi, tg);
+        else if(v[mid] > tg) return checkRow(v, lo, mid - 1, tg);
+        else return true;
+    }
+    bool solution2(vector<vector<int>> &v, int tg){
+        if(!v.size() || !v[0].size()) return false;
+        return subSol2(v, 0, 0, v.size() - 1, v[0].size() - 1, tg);
+    }
+    bool subSol2(vector<vector<int>> &v, int rl, int cl, int rh, int ch, int tg){
+        if(rl > rh || cl > ch || v[rl][cl] > tg || v[rh][ch] < tg) return false;
+        if(rl == rh && cl == ch) return v[rl][cl] == tg;
+        int r(rl), c(cl);
+        while(r <= rh && c <= ch && v[r][c] < tg){
+            r++;
+            c++;
+        }
+        if(r <= rh && c <= ch && v[r][c] == tg) return true;
+        else return subSol2(v, r, cl, rh, ch, tg) || subSol2(v, rl, c, r-1, ch,tg);
+    }
+    bool solution3(vector<vector<int>> &v, int tg){
+        int row(v.size());
+        if(!row || !v[0].size()) return false;
+        int col(v[0].size());
+        int r(0), c(col - 1);
+        while(r < row && c >= 0){
+            if(v[r][c] < tg) r++;
+            else if(v[r][c] > tg) c--;
+            else return true;
+        }
+        return false;
+    }
+};
