@@ -1,0 +1,36 @@
+/*
+Given an array of integers and an integer k, find out whether there are two distinct indices i and j in the array 
+such that nums[i] = nums[j] and the difference between i and j is at most k.
+*/
+
+class Solution {
+public:
+    bool containsNearbyDuplicate(vector<int>& nums, int k) {
+        return solution1(nums, k);
+    //    return solution2(nums, k);
+    }
+private:
+    bool solution1(vector<int> &v, int k){
+        int sz(v.size());
+        unordered_set<int> s;
+        if(sz < 2 || k <= 0) return false;
+        if(k >= sz) k = sz - 1;
+        for(int i(0); i < sz; i++){
+            if(i > k) s.erase(v[i - k - 1]);
+            if(s.find(v[i]) != s.end()) return true;
+            else s.insert(v[i]);
+        }
+        return false;
+    }
+    bool solution2(vector<int> &v, int k){
+        int sz(v.size());
+        unordered_map<int, int> m;
+        if(sz < 2 || k <= 0) return false;
+        if(k >= sz) k = sz - 1;
+        for(int i = 0; i < sz; i++){
+            if(m.find(v[i]) != m.end() && i - m[v[i]] <= k) return true;
+            else m[v[i]] = i;
+        }
+        return false;
+    }
+};
