@@ -43,7 +43,7 @@ private:
     }
     int compare(int n1, int n2){        //complicate but fast compare
         if(n1 == n2) return 0;
-        int tmp1(n1), tmp2(n2), scale1(1), scale2(1), ts1(scale1), ts2(scale2);
+        int tmp1(n1), tmp2(n2), scale1(1), scale2(1);
         while(tmp1 >= 10){
             scale1 *= 10;
             tmp1 /= 10;
@@ -54,6 +54,7 @@ private:
         }
         tmp1 = n1;
         tmp2 = n2;
+        int ts1(scale1), ts2(scale2);
         while(ts1 < ts2){
             tmp1 = tmp1 * 10 + (n2 / ts2) % 10;
             ts2 /= 10;
