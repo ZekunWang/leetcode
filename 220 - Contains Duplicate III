@@ -1,0 +1,25 @@
+/*
+Given an array of integers, find out whether there are two distinct indices i and j in the array such that 
+the difference between nums[i] and nums[j] is at most t and the difference between i and j is at most k.
+*/
+
+class Solution {
+public:
+    bool containsNearbyAlmostDuplicate(vector<int>& nums, int k, int t) {
+        return solution1(nums, k, t);
+    }
+private:
+    bool solution1(vector<int> &v, int k, int t){
+        int sz(v.size());
+        if(sz < 2 || k <= 0) return false;
+        if(k >= sz) k = sz - 1;
+        set<int> s;
+        for(int i = 0; i < sz; i++){
+            if(i > k) s.erase(v[i - k - 1]);
+            auto lb = s.lower_bound(v[i] - t);
+                if(lb != s.end() && *lb - v[i] <= t) return true;
+            s.insert(v[i]);
+        }
+        return false;
+    }
+};
