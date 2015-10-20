@@ -1,0 +1,62 @@
+/*
+Given an array nums containing n + 1 integers where each integer is between 1 and n (inclusive), 
+prove that at least one duplicate number must exist. Assume that there is only one duplicate number, find the duplicate one.
+
+Note:
+You must not modify the array (assume the array is read only).
+You must use only constant, O(1) extra space.
+Your runtime complexity should be less than O(n2).
+There is only one duplicate number in the array, but it could be repeated more than once.
+*/
+
+class Solution {
+public:
+    int findDuplicate(vector<int>& nums) {
+    //    return solution1(nums, 0, nums.size() - 1);
+    //    return solution2(nums);
+    //    return solution3(nums);     //Tortoise and hare loop detection / Floyd's loop detection
+        return solution4(nums);     //Tortoise and hare loop detection / Floyd's loop detection
+    }
+private:
+    int solution1(vector<int> &nums, int lo, int hi){
+        if(lo >= hi) return lo;
+        int mid((lo + hi) / 2), count(0);
+        for(int i : nums)
+            if(i <= mid) count++;
+        if(count > mid) return solution1(nums, lo, mid);
+        return solution1(nums, mid + 1, hi);
+    }
+    int solution2(vector<int> &nums){
+        int res(0);
+        for(int bit = 1; bit > 0 && bit < nums.size(); bit <<= 1){
+            int count = 0;
+            for(int i = 0; i < nums.size(); i++) count += bool(nums[i]&bit) - bool(i&bit);
+            if(count > 0) res |= bit;
+        }
+        return res;
+    }
+    int solution3(vector<int> &nums){
+        int sz(nums.size()), tortoise(sz),hare(sz);
+        do{
+            tortoise = nums[tortoise - 1];
+            hare = nums[nums[hare - 1] - 1];
+        }while(hare != tortoise);
+        
+        tortoise = sz;
+        while(hare != tortoise){
+            tortoise = nums[tortoise - 1];
+            hare = nums[hare - 1];
+        }
+        return tortoise;
+    }
+    int solution4(vector<int> &nums){
+        int fast = nums[nums[0]], slow = nums[0];
+        do{
+            fast = nums[nums[fast]];
+            slow = nums[slow]; 
+        }while (fast != slow);
+        slow = 0;
+        while (fast != slow) fast = nums[fast], slow = nums[slow];
+        return fast;
+    }
+};
