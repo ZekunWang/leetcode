@@ -1,0 +1,40 @@
+/*
+Find the kth largest element in an unsorted array. Note that it is the kth largest element in the sorted order, not the kth distinct element.
+
+For example,
+Given [3,2,1,5,6,4] and k = 2, return 5.
+
+Note: 
+You may assume k is always valid, 1 ≤ k ≤ array's length.
+*/
+
+class Solution {
+public:
+    int findKthLargest(vector<int>& nums, int k) {
+    //    return solution1(nums, k);
+        return solution2(nums, nums.size() - k);
+    }
+private:
+    int solution1(vector<int> &nums, int k){
+        sort(nums.begin(), nums.end());
+        return nums[nums.size() - k];
+    }
+    int solution2(vector<int> &v, int tg){
+        int lo(0), i(1), j(v.size() - 1), hi(j);
+        while(1){
+            while(i <= j){
+                if(v[i] <= v[lo]) i++;
+                else if(v[j] > v[lo]) j--;
+                else swap(v[i++], v[j--]);
+            }
+            if(j > tg){
+                i = ++lo;
+                hi = j;
+                tg++;
+            }else if(j < tg){
+                lo = i;
+                j = hi;
+            }else return v[lo];
+        }
+    }
+};
