@@ -1,0 +1,89 @@
+/*
+Implement a basic calculator to evaluate a simple expression string.
+The expression string may contain open ( and closing parentheses ), the plus + or minus sign -, non-negative integers 
+and empty spaces .
+
+You may assume that the given expression is always valid.
+Some examples:
+"1 + 1" = 2
+" 2-1 + 2 " = 3
+"(1+(4+5+2)-3)+(6+8)" = 23
+*/
+
+class Solution {
+public:
+    int calculate(string s) {
+        int cur(0);
+        //return solution1(s);
+        return solution2(s, cur, true);
+        //return solution3(s, cur);
+    }
+private:
+    int solution1(string s){
+        int res(0), op(1), num(0);
+        stack<int> stnm,stop;
+        for(char c : s){
+            if(isdigit(c)) num = 10 * num + c - '0';
+            else{
+                res += op * num;
+                num = 0;
+                if(c == '+') op = 1;
+                else if(c == '-') op = -1;
+                else if(c == '('){
+                    stnm.push(res);
+                    stop.push(op);
+                    res = 0;
+                    op = 1;
+                }else if(c == ')'){
+                    res = stnm.top() + stop.top() * res;
+                    stnm.pop();
+                    stop.pop();
+                }
+            }
+        }
+        res += op * num;
+        return res;
+    }
+    int solution2(string s, int &cur, bool lb){
+        int res(0), op(1), ig(0);//ig = num of '(' can be ignored
+        while(cur < s.length()){
+            if(!lb && (!ig && s[cur] == ')')) break;
+            else if(isdigit(s[cur])){
+                int tmp(0);
+                while(cur < s.length() && isdigit(s[cur])) tmp = 10 * tmp + s[cur++] - '0';
+                cur--;
+                res += op * tmp;
+            }else if(s[cur] == '+') op = 1;
+            else if(s[cur] == '-') op = -1;
+            else if(s[cur] == ')') ig--;
+            else if(s[cur] == '('){
+                if(op == -1) res -= solution2(s, ++cur, false);
+                else ig++;
+            }
+            cur++;
+        }
+        return res;
+    }
+    int solution3(string s, int &cur){
+        int res(0), op(1), num(0);
+        while(cur < s.length()){
+            if(isdigit(s[cur])){
+                num = 10 * num + s[cur] - '0';
+            }
+            else{
+                res += op * num;
+                num = 0;
+                if(s[cur] == '+') op = 1;
+                else if(s[cur] == '-') op = -1;
+                else if(s[cur] == '('){
+                    res += op * solution3(s, ++cur);
+                }else if(s[cur] == ')'){
+                    return res;
+                }
+            }
+            cur++;
+        }
+        res += op * num;
+        return res;
+    }
+};
