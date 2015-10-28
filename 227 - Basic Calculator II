@@ -1,0 +1,79 @@
+/*
+Implement a basic calculator to evaluate a simple expression string.
+
+The expression string contains only non-negative integers, +, -, *, / operators and empty spaces . 
+The integer division should truncate toward zero.
+
+You may assume that the given expression is always valid.
+Some examples:
+"3+2*2" = 7
+" 3/2 " = 1
+" 3+5 / 2 " = 5
+Note: Do not use the eval built-in library function.
+*/
+
+class Solution {
+public:
+    int calculate(string s) {
+        //return solution1(s + "+0");
+        return solution2(s);
+    }
+private:
+    int solution1(string s){
+        int res(0), op('+'), num(0), tpnm, tpop;
+        for(char c : s){
+            if(isdigit(c)){
+                num = 10 * num + c - '0';
+            }else if(c == '*' || c == '/'){
+                if(op == '+' || op == '-'){
+                    tpnm = res;
+                    tpop = op == '+' ? 1 : -1;
+                    res = num;
+                    op = c;
+                    num = 0;
+                }else{
+                    if(op == '*') res *= num;
+                    else res /= num;
+                    op = c;
+                    num = 0;
+                }
+            }else if(c == '+' || c == '-'){
+                if(op == '+' || op == '-'){
+                    if(op == '+') res += num;
+                    else res -= num;
+                    op = c;
+                    num = 0;
+                }else{
+                    if(op == '*') res *= num;
+                    else res /= num;
+                    res = tpnm + tpop * res;
+                    op = c;
+                    num = 0;
+                }
+            }
+        }
+        return res;
+    }
+    int solution2(string s){
+        int res(0), op('+'), tmp(0);
+        for(int i = 0; i < s.length(); i++){
+            if(s[i] == ' ') continue;
+            if(isdigit(s[i])){
+                int num(s[i] - '0');
+                while(++i < s.length() && isdigit(s[i])) num = 10 * num + s[i] - '0';
+                i--;
+                if(op == '+') tmp += num;
+                else if(op == '-') tmp -= num;
+                else if(op == '*') tmp *= num;
+                else tmp /= num;
+            }else{
+                if(s[i] == '+' || s[i] == '-'){
+                    res += tmp;
+                    tmp = 0;
+                }
+                op = s[i];
+            }
+        }
+        return res + tmp;
+    }
+};
