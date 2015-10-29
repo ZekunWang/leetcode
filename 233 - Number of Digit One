@@ -1,0 +1,26 @@
+/*
+Given an integer n, count the total number of digit 1 appearing in all non-negative integers less than or equal to n.
+
+For example:
+Given n = 13,
+Return 6, because digit 1 occurred in the following numbers: 1, 10, 11, 12, 13.
+Hint: Beware of overflow.
+*/
+
+class Solution {
+public:
+    int countDigitOne(int n) {
+        return solution1(n);
+    }
+private:
+    int solution1(int n){
+        int count(0), buff(0), scale(1);
+        if(n <= 0) return 0;
+        for(int tmp(n), scale(1); tmp > 0; tmp /= 10, scale *= 10){
+            int digit(tmp % 10);
+            count += digit * buff + (digit ? (digit > 1 ? scale : (n % scale + 1)) : 0);
+            buff = 10 * buff + scale;
+        }
+        return count;
+    }
+};
