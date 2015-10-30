@@ -1,0 +1,49 @@
+/*
+Given a singly linked list L: L0→L1→…→Ln-1→Ln,
+reorder it to: L0→Ln→L1→Ln-1→L2→Ln-2→…
+
+You must do this in-place without altering the nodes' values.
+
+For example,
+Given {1,2,3,4}, reorder it to {1,4,2,3}.
+*/
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    void reorderList(ListNode* head) {
+        solution1(head);
+    }
+private:
+    void solution1(ListNode *n){
+        if(!n || !n->next) return;
+        ListNode *f(n), *s(n), *nh(NULL);
+        while(f && f->next){    //make s to the middle of the list
+            s = s->next;
+            f = f->next->next;
+        }
+        f = s->next;
+        s->next = NULL; //devide list into two parts
+        while(f){       //reverse the seconde part
+            s = f->next;
+            f->next = nh;
+            nh = f;
+            f = s;
+        }
+        s = n;          //merge two parts
+        while(nh){
+            f = s->next;
+            s->next = nh;
+            nh = nh->next;
+            s->next->next = f;
+            s = s->next->next;
+        }
+    }
+};
