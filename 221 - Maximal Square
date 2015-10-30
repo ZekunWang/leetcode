@@ -1,0 +1,42 @@
+/*
+Given a 2D binary matrix filled with 0's and 1's, find the largest square containing all 1's and return its area.
+
+For example, given the following matrix:
+1 0 1 0 0
+1 0 1 1 1
+1 1 1 1 1
+1 0 0 1 0
+Return 4.
+*/
+
+class Solution {
+public:
+    int maximalSquare(vector<vector<char>>& matrix) {
+        return solution1(matrix);
+    }
+private:    
+    int solution1(vector<vector<char> >v){
+        int rowNum(v.size()), res(0);
+        if(!rowNum) return 0;
+        vector<char> tmpv(v[0]);
+        for(char c : tmpv){
+            if(c == '0') continue;
+            res++;
+            break;
+        }
+        for(int i(1); i < rowNum; i++){
+            int count(0), flag(1);
+            for(int j(0); j < v[0].size(); j++){
+                if(v[i][j] == '0') tmpv[j] = '0',count = 0;
+                else{
+                    tmpv[j] = min(256, tmpv[j] + 1);
+                    if(tmpv[j] - '0' > res) count++;
+                    else count = 0;
+                    if(flag && count > res) res++, flag = 0;
+                }
+            }
+            cout<<endl<<endl;
+        }
+        return res * res;
+    }
+};
