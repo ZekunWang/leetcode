@@ -1,0 +1,26 @@
+/*
+Divide two integers without using multiplication, division and mod operator.
+
+If it is overflow, return MAX_INT.
+*/
+
+class Solution {
+public:
+    int divide(int dividend, int divisor) {
+        return solution1(dividend, divisor);
+    }
+private:
+    int solution1(int a, int b){
+        if(!b || (a == INT_MIN && b == -1)) return INT_MAX;
+        int op(1), c(0);
+        long la(abs((long)a)), lb(abs((long)b));
+        if((a < 0) ^ (b < 0)) op = -op;
+        while(la >= lb){
+            long tc(1), tb(lb);
+            for(; la >= (tb << 1); tc <<= 1, tb <<= 1);
+            la -= tb;
+            c += tc;
+        }
+        return op > 0 ? c : -c;
+    }
+};
