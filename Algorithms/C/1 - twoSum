@@ -1,0 +1,35 @@
+/*
+Given an array of integers, find two numbers such that they add up to a specific target number.
+
+The function twoSum should return indices of the two numbers such that they add up to the target, 
+where index1 must be less than index2. Please note that your returned answers (both index1 and index2) are not zero-based.
+
+You may assume that each input would have exactly one solution.
+
+Input: numbers={2, 7, 11, 15}, target=9
+Output: index1=1, index2=2
+*/
+
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+int* solution1(int *nums, int sz, int tg){
+    int *res = malloc(sizeof(int) * 2);
+    int tmp[sz], minval = 0;
+    for(int i = 0; i < sz; i++)
+        if(nums[i] < minval) minval = nums[i];
+    memset(tmp, minval, sizeof(int) * sz);
+    for(int i = 0; i < sz; i++){
+        for(int j = 0; j < i; j++){
+            if(tmp[j] == nums[i]){
+                res[0] = (i > j ? j : i) + 1;
+                res[1] = (i > j ? i : j) + 1;
+                return res;
+            }
+        }
+        tmp[i] = tg - nums[i];
+    }
+}
+int* twoSum(int* nums, int numsSize, int target) {
+    return solution1(nums, numsSize, target);
+}
