@@ -27,12 +27,12 @@ private:
         return nums[nums.size() / 2];
     }
     int solution3(vector<int> &nums){
-        int cur = nums[0];
-        for(int i = 1, count = 1; i < nums.size(); i++){
-            if(nums[i] == cur) count++;
-            else count--;
-            if(count == -1){
-                cur = nums[i];
+        int cur(v[0]), count(1);
+        for(int i = 1; i < v.size(); i++){
+            if(v[i] != cur) count--;
+            else count++;
+            if(!count){
+                cur = v[i];
                 count = 1;
             }
         }
