@@ -7,7 +7,8 @@ The order of elements can be changed. It doesn't matter what you leave beyond th
 class Solution {
 public:
     int removeElement(vector<int>& nums, int val) {
-        return solution1(nums, val);
+        //return solution1(nums, val);
+        return solution2(nums, val);
     }
 private:
     int solution1(vector<int> &nums, int val){
@@ -16,5 +17,14 @@ private:
             else i++;
         }
         return nums.size();
+    }
+    int solution2(vector<int> &nums, int val){
+        if(!nums.size()) return 0;
+        int left(0), right(nums.size() - 1);
+        while(left <= right){
+        if(nums[left] != val) left++;
+        else swap(nums[left], nums[right--]);
+        }
+        return right + 1;
     }
 };
