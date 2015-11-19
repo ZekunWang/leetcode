@@ -14,15 +14,14 @@ public:
     }
 private:
     uint32_t solution1(uint32_t n){
-        int count = 32;
-        int num = 0;
+        uint32_t r(0), count(32);
         while(n){
-            num <<= 1;
-            num |= n & 1;
+            r <<= 1;
+            r |= n & 1;
             n >>= 1;
             count--;
         }
-        return num << count;
+        return r << count;
     }
     uint32_t solution2(uint32_t n, int count){
         if(!n) return 0;
