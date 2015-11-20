@@ -10,7 +10,8 @@ Return "100".
 class Solution {
 public:
     string addBinary(string a, string b) {
-        return solution1(a, b);
+        //return solution1(a, b);
+        return solution2(a, b);
     }
 private:
     string solution1(string a, string b){
@@ -34,5 +35,17 @@ private:
         }
         if(pre) res = '1' + res;
         return res;
+    }
+    string solution2(string a, string b){
+        int lena(a.length()), lenb(b.length());
+        int carry(0), lenl(max(lena, lenb)), lens(min(lena, lenb));
+        string &l = lena > lenb ? a : b, &s = lena > lenb ? b : a;
+        while(lenl--){
+            if(lens) carry += l[lenl] + s[--lens] - 96;
+            else carry += l[lenl] - 48;
+            l[lenl] = carry % 2 ? '1' : '0';
+            carry /= 2;
+        }
+        return carry ? '1' + l : l;
     }
 };
