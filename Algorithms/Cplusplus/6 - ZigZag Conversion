@@ -11,14 +11,40 @@ Write the code that will take a string and make this conversion given a number o
 string convert(string text, int nRows);
 convert("PAYPALISHIRING", 3) should return "PAHNAPLSIIGYIR".
 */
-class Solution {
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Solution1 {
+    string solution1(string s, int n);
 public:
     string convert(string s, int numRows) {
-        //return solution1(s, numRows);
-        return solution2(s, numRows);
+        return solution1(s, numRows);
+    }
+};
+
+string Solution::solution1(string s, int n){
+    if(s.length() <= n || n == 1) return s;
+    string res;
+    for(int row = 0, step = 2 * (n - 1); row < n; row++){
+        res += s[row];
+        for(int count = step; count - row < s.length(); count += step){
+            if(row && row < n - 1) res += s[count - row];
+            if(count + row < s.length()) res += s[count + row];
+        }
+    }
+    return res;
+}
+
+class Solution23 {
+public:
+    string convert(string s, int numRows) {
+        //return solution2(s, numRows);
+        return solution3(s, numRows);
     }
 private:
-    string solution1(string s, int numRows){
+    string solution2(string s, int numRows){
         int len = s.length();
         if(numRows == 1 || len <= numRows) return s;
         bool *addTwice = new bool[numRows];
@@ -43,7 +69,7 @@ private:
         delete addTwice;
         return newstr;
     }
-    string solution2(string s, int numRows){
+    string solution3(string s, int numRows){
         int len = s.length();
         if(numRows == 1 || len <= numRows) return s;
         string newstr;
