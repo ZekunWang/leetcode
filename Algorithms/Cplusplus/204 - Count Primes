@@ -1,0 +1,31 @@
+/*
+Count the number of prime numbers less than a non-negative number, n.
+*/
+
+#include <iosstream>
+#include <cmath>
+using namespace std;
+
+class Solution {
+    int solution1(int n);
+public:
+    int countPrimes(int n) {
+        return solution1(n);
+    }
+};
+
+int Solution::solution1(int n){
+    if(n < 5) return max(n - 2, 0);
+    bool a[n] = {};
+    int cnt(1), sz(sqrt(n));
+    for(int i = 3; i <= sz; i += 2){
+        if(a[i]) continue;
+        for(int j = 3, k = i * j; k < n; j += 2, k = i * j){
+            if(a[k]) continue;
+            a[k] = true;
+        }
+    }
+    for(int i = 3; i < n; i += 2)
+        if(!a[i]) cnt++;
+    return cnt;
+}
