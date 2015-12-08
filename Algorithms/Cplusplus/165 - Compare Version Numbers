@@ -12,6 +12,49 @@ Here is an example of version numbers ordering:
 0.1 < 1.1 < 1.2 < 13.37
 */
 
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Solution {
+    int solution1(string &s1, string &s2);
+    int compareNum(string s1, string s2);
+    string getNum(string &s, int &pos);
+public:
+    int compareVersion(string version1, string version2) {
+        return solution1(version1, version2);
+    }
+};
+
+int Solution::solution1(string &s1, string &s2){
+    int pos1(0), pos2(0);
+    while(pos1 < s1.length() || pos2 < s2.length()){
+        string t1(pos1 < s1.length() ? getNum(s1, pos1) : "");
+        string t2(pos2 < s2.length() ? getNum(s2, pos2) : "");
+        int r = compareNum(t1, t2);
+        if(r) return r > 0 ? 1 : -1;
+    }
+    return 0;
+}
+
+int Solution::compareNum(string s1, string s2){
+    int p1(0), p2(0);
+    while(p1 < s1.length() && s1[p1] == '0') p1++;
+    while(p2 < s2.length() && s2[p2] == '0') p2++;
+    if(p1 == s1.length() && p2 == s2.length()) return 0;
+    string ts1(s1.substr(p1)), ts2(s2.substr(p2));
+    if(ts1.length() == ts2.length())
+        return ts1.compare(ts2);
+    return ts1.length() > ts2.length() ? 1 : -1;
+}
+
+string Solution::getNum(string &s, int &pos){
+    int st(pos);
+    while(pos < s.length() && s[pos] != '.') pos++;
+    return s.substr(st, pos++ - st);
+}
+
+
 class Solution {
 public:
     int compareVersion(string version1, string version2) {
