@@ -1,0 +1,26 @@
+//Implement atoi to convert a string to an integer.
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Solution {
+    int solution1(string &s);
+public:
+    int myAtoi(string str) {
+        return solution1(str);
+    }
+};
+
+int Solution::solution1(string &s){
+    long pos(0), sign(1), res(0);
+    while(pos < s.length() && s[pos] == ' ') pos++;
+    if(pos >= s.length()) return 0;
+    if(s[pos] == '-') sign = -1, pos++;
+    else if(s[pos] == '+') sign = 1, pos++;
+    while(pos < s.length() && isdigit(s[pos]) && res <= long(INT_MAX) + 1)
+        res = 10 * res + s[pos++] - '0';
+    res = res * sign;
+    if(sign >= 0) return res > INT_MAX ? INT_MAX : res;
+    return res < INT_MIN ? INT_MIN : res;
+}
