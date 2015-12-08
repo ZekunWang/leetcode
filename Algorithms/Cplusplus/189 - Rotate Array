@@ -1,0 +1,35 @@
+/*
+Rotate an array of n elements to the right by k steps.
+
+For example, with n = 7 and k = 3, the array [1,2,3,4,5,6,7] is rotated to [5,6,7,1,2,3,4].
+
+Note:
+Try to come up as many solutions as you can, there are at least 3 different ways to solve this problem.
+*/
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Solution {
+    void solution1(vector<int> &nums, int k);
+    void swapVector(vector<int> &nums, int lo, int hi);
+public:
+    void rotate(vector<int>& nums, int k) {
+        solution1(nums, k);
+    }
+};
+
+void Solution::solution1(vector<int> &nums, int k){
+    k = k % nums.size();
+    if(!k) return;
+    int tmp(nums.size() - k);
+    swapVector(nums, 0, tmp - 1);
+    swapVector(nums, tmp, nums.size() - 1);
+    swapVector(nums, 0, nums.size() - 1);
+}
+
+void Solution::swapVector(vector<int> &nums, int lo, int hi){
+    while(lo < hi)
+        swap(nums[lo++], nums[hi--]);
+}
