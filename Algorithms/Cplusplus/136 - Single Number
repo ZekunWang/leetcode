@@ -3,12 +3,22 @@ Given an array of integers, every element appears twice except for one. Find tha
 Note:
 Your algorithm should have a linear runtime complexity. Could you implement it without using extra memory?
 */
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
 class Solution {
+    int solution1(vector<int> &n);
 public:
     int singleNumber(vector<int>& nums) {
-        int num = 0;
-        for(int i = 0; i < nums.size(); i++)
-            num ^= nums[i];
-        return num;
+        return solution1(nums);
     }
 };
+
+int Solution::solution1(vector<int> &n){
+    int res(0);
+    for(int i = 0; i < n.size(); i++)
+        res ^= n[i];
+    return res;
+}
