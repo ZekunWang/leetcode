@@ -11,18 +11,26 @@ Could you solve it with constant space complexity? (Note: The output array does 
 of space complexity analysis.)
 */
 
+#include <iostream>
+#include <vector>
+using namespace std;
+
 class Solution {
+    vector<int> solution1(vector<int> &n);
 public:
     vector<int> productExceptSelf(vector<int>& nums) {
-        int sz = nums.size() - 1;
-        vector<int> v(sz + 1, 1);
-        int left = nums[0], right = nums[sz];
-        for(int i = 1; i <= sz; i++){
-            v[i] *= left;
-            left *= nums[i];
-            v[sz - i] *= right;
-            right *= nums[sz - i];
-        }
-        return v;
+        return solution1(nums);
     }
 };
+
+vector<int> Solution::solution1(vector<int> &n){
+    vector<int> v(n.size(), 1);
+    int left(n[0]), sz(n.size() - 1), right(n[sz]);
+    for(int i = 1; i <= sz; i++){
+        v[i] *= left;
+        left *= n[i];
+        v[sz - i] *= right;
+        right *= n[sz - i];
+    }
+    return v;
+}
