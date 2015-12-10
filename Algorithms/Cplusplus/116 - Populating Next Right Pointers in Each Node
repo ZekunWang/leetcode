@@ -29,36 +29,22 @@ After calling your function, the tree should look like:
  *  TreeLinkNode(int x) : val(x), left(NULL), right(NULL), next(NULL) {}
  * };
  */
+
+#include <iostream>
+using namespace std;
+
 class Solution {
+    void solution1(TreeLinkNode *root);
 public:
     void connect(TreeLinkNode *root) {
-        //solution1(root);
-        solution2(root);
-    }
-private:
-    void solution1(TreeLinkNode *root){
-        if(!root) return;
-        queue<TreeLinkNode *> q;
-        q.push(root);
-        subSol1(q, 1, 1);
-    }
-    void subSol1(queue<TreeLinkNode *> &q, int lvl, int count){
-        if(q.empty()) return;
-        TreeLinkNode *tmp = q.front();
-        if(tmp->left){
-            q.push(tmp->left);
-            q.push(tmp->right);
-        }
-        q.pop();
-        if(count-- > 1) tmp->next = q.front();
-        else count = pow(2, lvl++);
-        subSol1(q, lvl, count);
-    }
-    void solution2(TreeLinkNode *root){
-        if(!root) return;
-        if(root->left) root->left->next = root->right;
-        if(root->left && root->next) root->right->next = root->next->left;
-        solution2(root->left);
-        solution2(root->right);
+        return solution1(root);
     }
 };
+
+void Solution::solution1(TreeLinkNode *root){
+    if(!root || !root->left) return;
+    root->left->next = root->right;
+    if(root->next) root->right->next = root->next->left;
+    solution1(root->left);
+    solution1(root->right);
+}
