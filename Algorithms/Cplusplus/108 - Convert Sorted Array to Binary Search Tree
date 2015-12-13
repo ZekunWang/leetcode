@@ -11,19 +11,23 @@ Given an array where elements are sorted in ascending order, convert it to a hei
  *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
  * };
  */
+#include <iostream>
+#include <vector>
+using namespace std;
+
 class Solution {
+    TreeNode *solution1(vector<int> &n, int lo, int hi);
 public:
     TreeNode* sortedArrayToBST(vector<int>& nums) {
         return solution1(nums, 0, nums.size() - 1);
     }
-private:
-    TreeNode *solution1(vector<int> &nums, int lo, int hi){
-        if(lo >  hi) return NULL;
-        if(lo == hi) return new TreeNode(nums[hi]);
-        int mid = (lo + hi) / 2;
-        TreeNode *node = new TreeNode(nums[mid]);
-        node->left = solution1(nums, lo, mid - 1);
-        node->right = solution1(nums, mid + 1, hi);
-        return node;
-    }
 };
+
+TreeNode *Solution::solution1(vector<int> &n, int lo, int hi){
+    if(lo > hi) return NULL;
+    int mid((lo + hi) / 2);
+    TreeNode *node = new TreeNode(n[mid]);
+    node->left = solution1(n, lo, mid - 1);
+    node->right = solution1(n, mid + 1, hi);
+    return node;
+}
