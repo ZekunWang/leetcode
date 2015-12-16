@@ -1,0 +1,84 @@
+/*
+Given a string array words, find the maximum value of length(word[i]) * length(word[j]) where the two words do not share common letters. You may assume that each word will contain only lower case letters. If no such two words exist, return 0.
+
+Example 1:
+Given ["abcw", "baz", "foo", "bar", "xtfn", "abcdef"]
+Return 16
+The two words can be "abcw", "xtfn".
+
+Example 2:
+Given ["a", "ab", "abc", "d", "cd", "bcd", "abcd"]
+Return 4
+The two words can be "ab", "cd".
+
+Example 3:
+Given ["a", "aa", "aaa", "aaaa"]
+Return 0
+No such pair of words.
+*/
+
+#include <iostream>
+#include <algorithm> //sort
+#include <vector>
+using namespace std;
+
+class Solution {
+    static bool sortFunction(string s1, string s2){return s1.length() < s2.length();}
+    bool noShareLetter(string l, string s);
+    int strToBinary(string s);
+    int solution1(vector<string> &v);
+    int solution2(vector<string> &v, const int sz);
+public:
+    int maxProduct(vector<string>& words) {
+        //return solution1(words);
+        return solution2(words, words.size());
+    }
+};
+
+bool Solution::noShareLetter(string l, string s){
+    unordered_map<char, int> m;
+    for(int i = 0; i < l.length(); i++) m[l[i]] = 1;
+    for(int i = 0; i < s.length(); i++)
+        if(m[s[i]]) return false;
+    return true;
+}
+
+int Solution::solution1(vector<string> &v){
+    sort(v.begin(), v.end(), sortFunction);     //use int represent 26 letters and use bit manipulation
+    int res(0);
+    for(int l = 0, r = v.size() - 1; l < r; r--){
+        int nl(-1);
+        for(int i = l; i < r; i++)
+            if(noShareLetter(v[r], v[i])) nl = i;
+        //cout<<endl<<nl<<' '<<r<<endl;
+        if(nl != -1){
+            res = max(res, int(v[r].length()) * int(v[nl].length()));
+            l = nl + 1;
+        }
+    }
+    return res;
+}
+
+int Solution::strToBinary(string s){
+    int res(0);
+    for(int i = 0; i < s.length(); i++)
+        res |= 1 << (s[i] - 97);
+    return res;
+}
+
+int Solution::solution2(vector<string> &v, const int sz){
+    sort(v.begin(), v.end(), sortFunction); //sort for faster search later
+    int res(0), a[sz] = {};
+    for(int i = 0; i < sz; i++)     //convert string to int, each bit is a char
+        a[i] = strToBinary(v[i]);
+    for(int l = 0, r = sz - 1; l < r; r--){     //same comparing strategy from solution1
+        int nl(-1);
+        for(int i = l; i < r; i++)
+            if(!(a[i] & a[r])) nl = i;  //nl is latest found location, it only gets larger
+        if(nl != -1){   //each found will narrow next search range
+            res = max(res, int(v[r].length()) * int(v[nl].length()));   //need to compare, since 1 * 10 > 2 * 4
+            l = nl + 1; //set new starting position for next search
+        }
+    }
+    return res;
+}
