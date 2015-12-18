@@ -14,6 +14,7 @@ Try to utilize the property of a BST.
 What if you could modify the BST node's structure?
 The optimal runtime complexity is O(height of BST).
 */
+
 /**
  * Definition for a binary tree node.
  * struct TreeNode {
@@ -23,20 +24,23 @@ The optimal runtime complexity is O(height of BST).
  *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
  * };
  */
+#include <iostream>
+using namespace std;
+
 class Solution {
+    int solution1(TreeNode *root, int &k, int &cnt);
 public:
     int kthSmallest(TreeNode* root, int k) {
-        int count = 0;
-        return traversal(root, k, &count)->val;
-    }
-private:
-    TreeNode* traversal(TreeNode *root, int k, int *count){
-        if(!root) return NULL;
-        TreeNode *left, *right;
-        left = traversal(root->left, k, count);
-        if(*count == k) return left;
-        (*count)++;
-        if(*count == k) return root;
-        return traversal(root->right, k, count);
+        int cnt(0);
+        return solution1(root, k, cnt);
     }
 };
+
+int Solution::solution1(TreeNode *root, int &k, int &cnt){
+    if(!root) return 0;
+    int tmp;
+    if(root->left) tmp = solution1(root->left, k, cnt);
+    if(cnt == k) return tmp;
+    if(++cnt == k) return root->val;
+    return solution1(root->right, k, cnt);
+}
