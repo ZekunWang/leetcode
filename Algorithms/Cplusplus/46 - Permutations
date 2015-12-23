@@ -1,0 +1,38 @@
+/*
+Given a collection of numbers, return all possible permutations.
+
+For example,
+[1,2,3] have the following permutations:
+[1,2,3], [1,3,2], [2,1,3], [2,3,1], [3,1,2], and [3,2,1].
+*/
+
+#include <iostream>
+#include <vector>
+#include <algorithm>    //swap()
+using namespace std;
+
+class Solution {
+    vector<vector<int> > solution1(vector<int> &nums);
+public:
+    vector<vector<int>> permute(vector<int>& nums){
+        return solution1(nums);
+    }
+};
+
+vector<vector<int> > Solution::solution1(vector<int> &nums){
+     vector<vector<int> > v;
+     int sz, nsz(nums.size());
+     if(!nsz) return v;
+     v.push_back(vector<int>(1, nums[0]));
+     for(int i = 1; i < nsz; i++){
+         sz = v.size();
+         for(int j = 0; j < sz; j++){
+             v[j].push_back(nums[i]);
+             for(int k = 0; k < i; k++){
+                 v.push_back(v[j]);
+                 swap(v.back()[k], v.back()[i]);
+             }
+         }
+     }
+     return v;
+}
