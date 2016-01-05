@@ -1,0 +1,31 @@
+/*
+You are given an n x n 2D matrix representing an image.
+
+Rotate the image by 90 degrees (clockwise).
+
+Follow up:
+Could you do this in-place?
+*/
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Solution {
+    void solution1(vector<vector<int> > &v);
+public:
+    void rotate(vector<vector<int>>& matrix) {
+        solution1(matrix);
+    }
+};
+
+void Solution::solution1(vector<vector<int> > &v){
+    int i, j, sz(v.size());
+    if(sz < 2) return;
+    for(int i = 0; i < sz / 2; i++)
+        for(int j = 0; j < sz; j++)
+            swap(v[i][j], v[sz - 1 - i][j]);
+    for(int i = 0; i < sz; i++)
+        for(int j = 0; j < i; j++)
+            swap(v[i][j], v[j][i]);
+}
