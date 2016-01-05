@@ -1,0 +1,52 @@
+/*
+Given an integer n, generate a square matrix filled with elements from 1 to n2 in spiral order.
+
+For example,
+Given n = 3,
+
+You should return the following matrix:
+[
+ [ 1, 2, 3 ],
+ [ 8, 9, 4 ],
+ [ 7, 6, 5 ]
+]
+*/
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Solution {
+    vector<vector<int> > solution1(int n);
+    void subSol1(vector<vector<int> > &v, int row, int col, int num, int lim, int dir);
+public:
+    vector<vector<int>> generateMatrix(int n) {
+        return solution1(n);
+    }
+};
+
+vector<vector<int> > Solution::solution1(int n){
+    vector<vector<int> > v(n, vector<int>(n,0));
+    subSol1(v, 0, 0, 1, n * n, 0);
+    return v;
+}
+
+void Solution::subSol1(vector<vector<int> > &v, int row, int col, int num, int lim, int dir){
+    if(num > lim) return;
+    v[row][col] = num;
+    switch(dir){
+        case 0: if(col + 1 < v.size() && !v[row][col + 1]) col++;   // keep right
+                else row++, dir = 1;        // go down
+                break;
+        case 1: if(row + 1 < v.size() && !v[row + 1][col]) row++;   // keep down
+                else col--, dir = 2;        // go left
+                break;
+        case 2: if(col - 1 >= 0 && !v[row][col - 1]) col--;         // keep left
+                else row--, dir = 3;        // go up
+                break;
+        case 3: if(row - 1 >= 0 && !v[row - 1][col]) row--;         // keep up
+                else col++, dir = 0;        // go right
+                break;
+    }
+    subSol1(v, row, col, num + 1, lim, dir);
+}
