@@ -13,16 +13,21 @@ Note:
 Your solution should be in logarithmic complexity.
 */
 
+#include <iostream>
+#include <vector>
+using namespace std;
+
 class Solution {
+    int solution1(vector<int> &v, int lo, int hi);
 public:
     int findPeakElement(vector<int>& nums) {
         return solution1(nums, 0, nums.size());
     }
-private:
-    int solution1(vector<int> &v, int lo, int hi){
-        if(lo + 1 >= hi) return lo;
-        int mid = (lo + hi) / 2;
-        if(v[mid] > v[mid - 1]) return solution1(v, mid, hi);
-        return solution1(v, lo, mid);
-    }
 };
+
+int Solution::solution1(vector<int> &v, int lo, int hi){
+    if(lo + 1 >= hi) return lo;
+    int mid((lo + hi) / 2);
+    if(v[mid - 1] < v[mid]) return solution1(v, mid, hi);
+    return solution1(v, lo, mid);
+}
