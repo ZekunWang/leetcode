@@ -1,0 +1,46 @@
+/*
+Given a m x n matrix, if an element is 0, set its entire row and column to 0. Do it in place.
+
+Follow up:
+Did you use extra space?
+A straight forward solution using O(mn) space is probably a bad idea.
+A simple improvement uses O(m + n) space, but still not the best solution.
+Could you devise a constant space solution?
+*/
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Solution {
+    void solution1(vector<vector<int> > &v);
+public:
+    void setZeroes(vector<vector<int>>& matrix) {
+        solution1(matrix);
+    }
+};
+
+void Solution::solution1(vector<vector<int> > &v){
+    if(!v.size()) return;
+    int row(-1), col(-1), m(v.size()), n(v[0].size());
+    for(int i = 0; i < m; i++){     // find all 0s, mark at 1st 0's row and col
+        for(int j = 0; j < n; j++){
+            if(!v[i][j]){
+                if(row != -1)
+                    v[i][col] = v[row][j] = 0;
+                else row = i, col = j;
+            }
+        }
+    }
+    if(row == -1) return;
+    for(int i = 0; i < m; i++){     // find all marked row and set to 0
+        if(i == row || v[i][col]) continue;
+        for(int j = 0; j < n; j++) v[i][j] = 0;
+    }
+    for(int j = 0; j < n; j++){     // find all marked col and set to 0
+        if(j == col || v[row][j]) continue;
+        for(int i = 0; i < m; i++) v[i][j] = 0;
+    }   //then set row and col of 1st 0 to 0;
+    for(int i = 0; i < m; i++) if(v[i][col]) v[i][col] = 0;
+    for(int j = 0; j < n; j++) if(v[row][j]) v[row][j] = 0;
+}
