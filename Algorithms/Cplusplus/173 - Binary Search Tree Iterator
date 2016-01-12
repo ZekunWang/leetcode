@@ -15,12 +15,11 @@ Note: next() and hasNext() should run in average O(1) time and uses O(h) memory,
  * };
  */
 class BSTIterator {
-private:
     stack<TreeNode *> st;
 public:
     BSTIterator(TreeNode *root) {
-        TreeNode *cur(root);
         if(!root) return;
+        TreeNode *cur = root;
         while(cur){
             st.push(cur);
             cur = cur->left;
@@ -35,13 +34,13 @@ public:
     /** @return the next smallest number */
     int next() {
         if(st.empty()) return -1;
-        TreeNode *t(st.top()), *tr(t->right);
+        TreeNode *top(st.top()), *tmp(top->right);
         st.pop();
-        while(tr){
-            st.push(tr);
-            tr = tr->left;
+        while(tmp){
+            st.push(tmp);
+            tmp = tmp->left;
         }
-        return t->val;
+        return top->val;
     }
 };
 
