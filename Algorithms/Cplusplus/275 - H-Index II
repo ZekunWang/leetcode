@@ -1,0 +1,39 @@
+/*
+Follow up for H-Index: What if the citations array is sorted in ascending order? Could you optimize your algorithm?
+
+Hint:
+
+Expected runtime complexity is in O(log n) and the input is sorted.
+*/
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Solution {
+    int solution1(vector<int> &v, int lo, int hi);
+    int solution2(vector<int> &v);
+public:
+    int hIndex(vector<int>& citations) {
+        if(!citations.size()) return 0;
+        //return solution1(v, 0, v.size() - 1);
+        return solution2(citations);
+    }
+};
+
+int Solution::solution1(vector<int> &v, int lo, int hi){
+    if(lo > hi) return v.size() - lo;
+    int mid((lo + hi) / 2), cnt(v.size() - mid);
+    if(v[mid] < cnt) return max(v[mid], solution1(v, mid + 1, hi));
+    return solution1(v, lo, mid - 1);
+}
+
+int Solution::solution2(vector<int> &v){
+    int sz(v.size()), h(sz), count(sz);
+    for(int i = sz - 1; i >= 0 && count;){
+        if(v[i] >= h) i--;
+        else h--;
+        count--;
+    }
+    return h;
+}
