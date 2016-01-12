@@ -17,88 +17,40 @@ What are the possible values of h-index?
 A faster approach is to use extra space.
 */
 
+#include <iostream>
+#include <vector>
+using namespace std;
+
 class Solution {
+    int solution1(vector<int> &v);
+    int solution1(vector<int> &v, int lo, int hi);
+    int solution2(vector<int> &v);
 public:
     int hIndex(vector<int>& citations) {
-        //return solution1(citations);      //sort
-        //return solution2(citations);      //no sort
-        //return solution2(citations);        //no sort with unordered_map
-        return solution4(citations);        //O(n) space
-    }
-private:
-    int solution1(vector<int> &v){
-        int sz = v.size(), count(sz), h(sz);
-        sort(v.begin(), v.end());
-        for(int i = sz - 1; i >= 0 && count;){
-            if(v[i] < h) h--;
-            else i--;
-            count--;
-        }
-        return count ? h-1 : h;
-    }
-    int solution2(vector<int> &v){
-        int sz(v.size()), count(sz),  h(sz), tmphi;
-        bool setRework = true;
-        for(int i = sz - 1; i >= 0 && count; i--){
-            if(v[i] >= h) count--;
-            else{
-                if(setRework) {tmphi = i; setRework = false;}
-                if(i + 1 == count){
-                    h--;
-                    count--;
-                    if(v[tmphi] == h){
-                        count--; 
-                        setRework = true;
-                    }
-                    for(int j = tmphi - 1; j >= i && count > 0; j--){
-                        if(v[j] == h) count--;
-                        else if(setRework && v[j] < h)
-                            tmphi = j; setRework = false;
-                    }
-                }
-            }
-        }
-        return count > 0 ? h-1 : h;
-    }
-    int solution3(vector<int> &v){
-        int sz(v.size()), count(sz), h(sz), remain(sz);
-        if(!sz) return 0;
-        unordered_map<int, int> m;
-        auto tmphi = m.begin();
-        bool setRework = true;
-        for(int i = 0; i < sz; i++)
-            m[v[i]]++;
-        for(auto i = m.begin(); i != m.end() && count; i++){
-            if(i->first >= h) count -= i->second;
-            else{
-                if(setRework) {tmphi = i; setRework = false;}
-                if(count >= remain){
-                    h -= i->second;
-                    count -= i->second;
-                    if(tmphi->first == h){
-                        count -= tmphi->second;
-                        tmphi++;
-                        setRework = true;
-                    }
-                    for(auto j = tmphi; j != i && count > 0; j++){
-                        if(j->first == h) count -= j->second;
-                        else if(setRework && j->first < h)
-                            tmphi = j; setRework = false;
-                    }
-                    if(i->first == h) count -= i->second;
-                }
-            }
-            remain -= i->second;
-        }
-        return count > 0 ? h-1 : h;
-    }
-    int solution4(vector<int> &v){
-        int sz(v.size()), count[sz+1] = {};
-        for(int i = 0; i < sz; i++)
-            count[v[i] >= sz ? sz : v[i]]++;
-        for(int i = sz; i >= 0; i--){
-            if(count[i] >= i) return i;
-            else count[i-1] += count[i];
-        }
+        //return solution1(citations);
+        return solution2(citations);
     }
 };
+
+int Solution::solution1(vector<int> &v){
+    sort(v.begin(), v.end());
+    return solution1(v, 0, v.size() - 1);
+}
+
+int Solution::solution1(vector<int> &v, int lo, int hi){
+    if(lo > hi) return v.size() - lo;
+    int mid((lo + hi) / 2), cnt(v.size() - mid);
+    if(v[mid] < cnt) return solution1(v, mid + 1, hi);
+    return solution1(v, lo, mid - 1);
+}
+
+int Solution::solution2(vector<int> &v){
+    int sz(v.size()), tmp[sz + 1] = {};
+    memset(tmp, 0, 4 * (sz + 1));
+    for(int i = 0; i < sz; i++)
+        tmp[v[i] >= sz ? sz : v[i]]++;
+    for(int i = sz; i >= 0; i--){
+        if(tmp[i] >= i) return i;
+        else tmp[i - 1] += tmp[i];
+    }
+}
