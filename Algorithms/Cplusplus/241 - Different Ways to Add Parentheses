@@ -1,0 +1,81 @@
+/*
+Given a string of numbers and operators, return all possible results from computing all the 
+different possible ways to group numbers and operators. The valid operators are +, - and *.
+
+Example 1
+Input: "2-1-1".
+((2-1)-1) = 0
+(2-(1-1)) = 2
+Output: [0, 2]
+
+Example 2
+Input: "2*3-4*5"
+(2*(3-(4*5))) = -34
+((2*3)-(4*5)) = -14
+((2*(3-4))*5) = -10
+(2*((3-4)*5)) = -10
+(((2*3)-4)*5) = 10
+Output: [-34, -14, -10, -10, 10]
+*/
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cstdlib>
+using namespace std;
+
+class Solution {
+    vector<int> solution1(string s);
+    vector<int> solution2(string s);
+    unordered_map<string, vector<int> > m;
+public:
+    vector<int> diffWaysToCompute(string input) {
+        //return solution1(input);
+        return solution2(input);
+    }
+};
+
+vector<int> Solution::solution1(string s){
+    vector<int> v;
+    for(int i = 0; i < s.length(); i++){
+        char c(s[i]);
+        if(c == '+' || c == '-' || c == '*'){
+            vector<int> t1 = solution1(s.substr(0, i));
+            vector<int> t2 = solution1(s.substr(i+1));
+            for(int j = 0; j < t1.size(); j++){
+                for(int k = 0; k < t2.size(); k++){
+                    if(c == '+') v.push_back(t1[j] + t2[k]);
+                    else if(c == '-') v.push_back(t1[j] - t2[k]);
+                    else v.push_back(t1[j] * t2[k]);
+                }
+            }
+        }
+    }
+    if(v.empty()) v.push_back(atoi(s.c_str()));
+    return v;
+}
+
+vector<int> Solution::solution2(string s){
+    vector<int> v;
+    for(int i = 0; i < s.length(); i++){
+        char c(s[i]);
+        if(c == '+' || c == '-' || c == '*'){
+            vector<int> t1, t2;
+            string s1(s.substr(0, i)), s2(s.substr(i + 1));
+            if(m.find(s1) != m.end()) t1 = m[s1];
+            else t1 = solution2(s1);
+            if(m.find(s2) != m.end()) t2 = m[s2];
+            else t2 = solution2(s2);
+            for(int j = 0; j < t1.size(); j++){
+                for(int k = 0; k < t2.size(); k++){
+                    if(c == '+') v.push_back(t1[j] + t2[k]);
+                    else if(c == '-') v.push_back(t1[j] - t2[k]);
+                    else v.push_back(t1[j] * t2[k]);
+                }
+            }
+        }
+    }
+    if(v.empty()) v.push_back(atoi(s.c_str()));
+    m[s] = v;
+    return v;
+}
