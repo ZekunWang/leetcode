@@ -1,0 +1,54 @@
+/*
+Follow up for "Remove Duplicates":
+What if duplicates are allowed at most twice?
+
+For example,
+Given sorted array nums = [1,1,1,2,2,3],
+
+Your function should return length = 5, with the first five elements of nums being 1, 1, 2, 2 and 3. 
+It doesn't matter what you leave beyond the new length.
+*/
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Solution {
+    int solution1(vector<int> &v);
+    int solution2(vector<int> &v);
+public:
+    int removeDuplicates(vector<int>& nums) {
+        //return solution1(nums);
+        return solution2(nums);
+    }
+};
+
+int Solution::solution1(vector<int> &v){
+    if(v.size() < 3) return v.size();
+    int cur(v[0]), left, right(1), cnt(1), sz(v.size());
+    while(right < sz && (cur < v[right] || cnt < 2)) {
+        if(cur < v[right]) cnt = 0;
+        cur = v[right++];
+        cnt++;
+    }
+    left = right++;
+    while(right < sz){
+        if(cur < v[right]) cnt = 0;
+        if(cnt < 2){
+            cur = v[right];
+            swap(v[left++], v[right]);
+            cnt++;
+        }
+        right++;
+    }
+    return left;
+}
+
+int Solution::solution2(vector<int> &v){
+    int cur(0);
+    for(int i = 0; i < v.size(); i++){
+        if(cur < 2 || v[cur - 2] < v[i])
+            v[cur++] = v[i];
+    }
+    return cur;
+}
