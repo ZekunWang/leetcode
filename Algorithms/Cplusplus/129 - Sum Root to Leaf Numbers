@@ -24,22 +24,23 @@ Return the sum = 12 + 13 = 25.
  *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
  * };
  */
+#include <iostream>
+using namespace std;
+
 class Solution {
+    void solution1(TreeNode *root, int cnt, int &sum);
 public:
     int sumNumbers(TreeNode* root) {
         int sum(0);
         solution1(root, 0, sum);
         return sum;
     }
-private:
-    void solution1(TreeNode *root, int cur, int &sum){
-        if(!root){
-            sum += cur;
-            return;
-        }
-        cur = cur * 10 + root->val;
-        if(root->left) solution1(root->left, cur, sum);
-        if(root->right) solution1(root->right, cur, sum);
-        if(!root->left && !root->right) sum += cur;
-    }
 };
+
+void Solution::solution1(TreeNode *root, int cnt, int &sum){
+    if(!root) return;
+    cnt = cnt * 10 + root->val;
+    solution1(root->left, cnt, sum);
+    solution1(root->right, cnt, sum);
+    if(!root->left && !root->right) sum += cnt;
+}
