@@ -1,0 +1,53 @@
+/*
+Follow up for "Search in Rotated Sorted Array":
+What if duplicates are allowed?
+
+Would this affect the run-time complexity? How and why?
+
+Write a function to determine if a given target is in the array.
+*/
+
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Solution {
+    bool solution1(vector<int> &v, int tg);
+    bool solution2(vector<int> &v, int tg, int lo, int hi);
+public:
+    bool search(vector<int>& nums, int target) {
+        //return solution1(nums, target);
+        return solution2(nums, target, 0, nums.size() - 1);
+    }
+};
+
+bool Solution::solution1(vector<int> &v, int tg){
+    int lo(0), hi(v.size() - 1), mid(0);
+    while(lo <= hi){
+        mid = (lo + hi) / 2;
+        if(v[mid] == tg) return true;
+        if(v[mid] < v[hi]){
+            if(tg > v[mid] && tg <= v[hi]) lo = mid + 1;
+            else hi = mid - 1;
+        }else if(v[mid] > v[hi]){
+            if(tg < v[mid] && tg >= v[lo]) hi = mid - 1;
+            else lo = mid + 1;
+        }else hi--;
+    }
+    return false;
+}
+
+bool Solution::solution2(vector<int> &v, int tg, int lo, int hi){
+    if(lo > hi) return false;
+    int mid = (lo + hi) / 2;
+    if(v[mid] == tg) return true;
+    else if(v[mid] == v[hi]) return solution2(v, tg, lo, hi - 1);
+    else if(v[mid] < v[hi]){
+        if(v[mid] < tg && tg <= v[hi]) return solution2(v, tg, mid + 1, hi);
+        return solution2(v, tg, lo, mid - 1);
+    }else{
+        if(v[lo] <= tg && tg < v[mid]) return solution2(v, tg, lo, mid - 1);
+        return solution2(v, tg, mid + 1, hi);
+    }
+}
