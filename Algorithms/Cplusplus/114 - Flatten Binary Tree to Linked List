@@ -1,0 +1,83 @@
+/*
+Given a binary tree, flatten it to a linked list in-place.
+For example,
+Given
+         1
+        / \
+       2   5
+      / \   \
+     3   4   6
+The flattened tree should look like:
+   1
+    \
+     2
+      \
+       3
+        \
+         4
+          \
+           5
+            \
+             6
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+#include <iostream>
+using namespace std;
+
+class Solution {
+    void solution1(TreeNode *root);
+    void solution2(TreeNode *root);
+    TreeNode* solution3(TreeNode *root);
+public:
+    void flatten(TreeNode* root) {
+        //solution1(root);
+        //solution2(root);
+        solution3(root);
+    }
+};
+//top-down iterative solution
+void Solution::solution1(TreeNode *root){
+    TreeNode *tmp(root), *tmp2;
+    while(tmp){
+        if(tmp->left){
+            tmp2 = tmp->left;
+            while(tmp2->right) tmp2 = tmp2->right;
+            tmp2->right = tmp->right;
+            tmp->right = tmp->left;
+            tmp->left = NULL;
+        }
+        tmp = tmp->right;
+    }
+}
+//bottom-up recursive solution
+void Solution::solution2(TreeNode *root){
+    if(!root) return;
+    solution2(root->left);
+    solution2(root->right);
+    TreeNode *tmp(root->left);
+    if(!tmp) return;
+    while(tmp->right) tmp = tmp->right;
+    tmp->right = root->right;
+    root->right = root->left;
+    root->left = NULL;
+}
+//get most right node of both subtrees, reconstruct, return most right node of current tree
+TreeNode* Solution::solution3(TreeNode *root){
+    if(!root) return NULL;
+    TreeNode *left = solution3(root->left);
+    TreeNode *right = solution3(root->right);
+    if(!left) return right ? right : root;
+    left->right = root->right;
+    root->right = root->left;
+    root->left = NULL;
+    return right ? right : left;
+}
