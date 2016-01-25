@@ -1,0 +1,48 @@
+/*
+Given a range [m, n] where 0 <= m <= n <= 2147483647, return the bitwise AND of all numbers in this range, inclusive.
+
+For example, given the range [5, 7], you should return 4.
+*/
+
+#include <iostream>
+using namespace std;
+
+class Solution {
+    int numOfBit(int n);
+    int solution1(int m, int n);
+    int solution2(int m, int n);
+public:
+    int rangeBitwiseAnd(int m, int n) {
+        //return solution1(m, n);
+        return solution1(m, n);
+    }
+};
+//iteration
+int Solution::solution1(int m, int n){
+    int res(0), tmp;
+    if(m == n) return m;
+    while(m && n){
+        if((m ^ n) > m) return res;
+        tmp = 1 << (numOfBit(m) - 1);
+        m -= tmp;
+        n -= tmp;
+        res += tmp;
+    }
+    return res;
+}
+//recursion
+int Solution::solution2(int m, int n){
+    if(m == n) return n;
+    if((m ^ n) > m) return 0;
+    int tmp = 1 << (numOfBit(m) - 1);
+    return solution2(m - tmp, n - tmp) + tmp;
+}
+
+int Solution::numOfBit(int n){
+    int count(0);
+    while(n){
+        count++;
+        n >>= 1;
+    }
+    return count;
+}
