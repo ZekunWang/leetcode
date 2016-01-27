@@ -1,0 +1,68 @@
+/*
+Given a linked list and a value x, partition it such that all nodes less than x come before nodes greater than or equal to x.
+
+You should preserve the original relative order of the nodes in each of the two partitions.
+
+For example,
+Given 1->4->3->2->5->2 and x = 3,
+return 1->2->2->4->3->5.
+*/
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+#include <iostream。
+using namespace std;
+
+class Solution {
+    ListNode* solution1(ListNode *head, int x);
+    ListNode* solution2(ListNode *head, int x);
+public:
+    ListNode* partition(ListNode* head, int x) {
+        //return solution1(head, x);
+        return solution2(head, x);
+    }
+};
+
+ListNode* Solution::solution1(ListNode *head, int x){
+    if(!head || !head->next) return head;
+    ListNode nlHead(0), *nLess(&nlHead), nmHead(0), *nMore(&nmHead), *nMHead(NULL);
+    nmHead.next = head;
+    while(nMore && nMore->next){
+        if(nMore->next->val < x){
+            nLess->next = nMore->next;
+            nMore->next = nMore->next->next;
+            nLess = nLess->next;
+        }else{
+            if(!nMHead) nMHead = nMore->next;
+            nMore = nMore->next;
+        }
+    }
+    nLess->next = nMHead;
+    return nlHead.next;
+}
+
+ListNode* Solution::solution2(ListNode *head, int x){
+    ListNode nhead(INT_MIN), *cur(&nhead), *tmp, *prv(NULL);
+    nhead.next = head;
+    while(cur->next){
+        if(cur->next->val >= x){
+            if(!prv) prv = cur; //find 1st node's next val >= x and will always points to val >= x
+            cur = cur->next;
+        }else{
+            if(prv){
+                tmp = cur->next;
+                cur->next = tmp->next;
+                tmp->next = prv->next;
+                prv->next = tmp;
+                prv = prv->next;
+            }else cur = cur->next;
+        }
+    }
+    return nhead.next;
+}
