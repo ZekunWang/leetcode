@@ -25,7 +25,7 @@ ListNode* Solution::solution1(ListNode *head){
     nhead.next = head;
     while(cur->next){
         if(chk->next->val > cur->next->val) chk = &nhead;
-        while(chk->next->val <= cur->next->val && chk != cur) chk = chk->next;
+        while(chk->next->val < cur->next->val) chk = chk->next;
         if(chk != cur){
             ListNode *tmp(cur->next);
             cur->next = tmp->next;
