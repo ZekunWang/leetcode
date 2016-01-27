@@ -1,0 +1,33 @@
+/*
+Given a sorted array of integers, find the starting and ending position of a given target value.
+
+Your algorithm's runtime complexity must be in the order of O(log n).
+
+If the target is not found in the array, return [-1, -1].
+
+For example,
+Given [5, 7, 7, 8, 8, 10] and target value 8,
+return [3, 4].
+*/
+
+public class Solution {
+    private int[] res = new int[]{-1, -1};
+    public int[] searchRange(int[] nums, int target) {
+        solution1(nums, 0, nums.length - 1, target);
+        return res;
+    }
+    public void solution1(int[] nums, int lo, int hi, int tg){
+        if(lo > hi) return;
+        int mid = (lo + hi) / 2;
+        if(nums[mid] == tg){
+            if(res[0] == -1) res[0] = res[1] = mid;
+            else{
+                res[0] = Math.min(res[0], mid);
+                res[1] = Math.max(res[1], mid);
+            }
+            solution1(nums, mid + 1, hi, tg);
+            solution1(nums, lo, mid - 1, tg);
+        }else if(nums[mid] < tg) solution1(nums, mid + 1, hi, tg);
+        else solution1(nums, lo, mid - 1, tg);
+    }
+}
