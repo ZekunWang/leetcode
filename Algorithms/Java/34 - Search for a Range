@@ -20,11 +20,10 @@ public class Solution {
         if(lo > hi) return;
         int mid = (lo + hi) / 2;
         if(nums[mid] == tg){
-            if(res[0] == -1) res[0] = res[1] = mid;
-            else{
+            if(res[0] != -1){
                 res[0] = Math.min(res[0], mid);
                 res[1] = Math.max(res[1], mid);
-            }
+            }else res[0] = res[1] = mid;
             solution1(nums, mid + 1, hi, tg);
             solution1(nums, lo, mid - 1, tg);
         }else if(nums[mid] < tg) solution1(nums, mid + 1, hi, tg);
