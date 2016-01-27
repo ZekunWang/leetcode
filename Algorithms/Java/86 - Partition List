@@ -1,0 +1,63 @@
+/*
+Given a linked list and a value x, partition it such that all nodes less than x come before nodes greater than or equal to x.
+
+You should preserve the original relative order of the nodes in each of the two partitions.
+
+For example,
+Given 1->4->3->2->5->2 and x = 3,
+return 1->2->2->4->3->5.
+*/
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+
+public class Solution {
+    public ListNode partition(ListNode head, int x) {
+        //return solution1(head, x);
+        return solution2(head, x);
+    }
+    public ListNode solution1(ListNode head, int x){
+        if(head == null || head.next == null) return head;
+        ListNode nLHead = new ListNode(0), nMHead = new ListNode(0);
+        ListNode nLess = nLHead, nMore = nMHead, MStart = null;
+        nMHead.next = head;
+        while(nMore.next != null){
+            if(nMore.next.val < x){
+                nLess.next = nMore.next;
+                nMore.next = nMore.next.next;
+                nLess = nLess.next;
+            }else{
+                if(MStart == null) MStart = nMore.next;
+                nMore = nMore.next;
+            }
+        }
+        nLess.next = MStart;
+        return nLHead.next;
+    }
+    public ListNode solution2(ListNode head, int x){
+        if(head == null || head.next == null) return head;
+        ListNode nHead = new ListNode(0), pre = null, cur = nHead;
+        nHead.next = head;
+        while(cur.next != null){
+            if(cur.next.val < x){
+                if(pre != null){
+                    ListNode tmp = cur.next;
+                    cur.next = tmp.next;
+                    tmp.next = pre.next;
+                    pre.next = tmp;
+                    pre = tmp;
+                }else cur = cur.next;
+            }else{
+                if(pre == null) pre = cur;
+                cur = cur.next;
+            }
+        }
+        return nHead.next;
+    }
+}
