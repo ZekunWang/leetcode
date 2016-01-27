@@ -16,8 +16,8 @@ So you should return 1, because there is only one bulb is on.
 public class Solution {
     public int bulbSwitch(int n) {
         // java.lang.Math.sqrt(); is used
-        // java.lang.* is imported by default, can use Math.sqrt();
-        // java.lang.String can be String as well
+        // java.lang.* is the only package imported by default
+        // String = java.lang.String and System = java.lang.System
         return (int)Math.sqrt(n);
     }
 }
