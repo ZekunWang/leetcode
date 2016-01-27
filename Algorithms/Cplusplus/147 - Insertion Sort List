@@ -21,12 +21,12 @@ public:
 
 ListNode* Solution::solution1(ListNode *head){
     if(!head || !head->next) return head;
-    ListNode nhead(INT_MIN), *cur(head), *chk(&nhead);
+    ListNode nhead(0), *cur(head), *chk(&nhead);
     nhead.next = head;
     while(cur->next){
         if(chk->next->val > cur->next->val) chk = &nhead;
-        while(chk->next->val < cur->next->val) chk = chk->next;
-        if(chk->next != cur->next){
+        while(chk->next->val <= cur->next->val && chk != cur) chk = chk->next;
+        if(chk != cur){
             ListNode *tmp(cur->next);
             cur->next = tmp->next;
             tmp->next = chk->next;
