@@ -1,0 +1,39 @@
+/*
+Given inorder and postorder traversal of a tree, construct the binary tree.
+
+Note:
+You may assume that duplicates do not exist in the tree.
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Solution {
+    TreeNode* solution1(vector<int> &inorder, int lin, int rin, vector<int> &postorder, int lpo, int rpo);
+public:
+    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+        return solution1(inorder, 0, inorder.size() - 1, postorder, 0, postorder.size() - 1);
+    }
+};
+
+TreeNode* Solution::solution1(vector<int> &in, int lin, int rin, vector<int> &po, int lpo, int rpo){
+    if(lin > rin) return NULL;
+    if(lin == rin) return new TreeNode(po[rpo]);
+    int pos(lin), tg(po[rpo]);
+    TreeNode *node = new TreeNode(tg);
+    while(in[pos] != tg) pos++;
+    int cnt(rin - pos);
+    node->right = solution1(in, pos + 1, rin, po, rpo - cnt, rpo - 1);
+    node->left = solution1(in, lin, pos - 1, po, lpo, rpo - cnt - 1);
+    return node;
+}
