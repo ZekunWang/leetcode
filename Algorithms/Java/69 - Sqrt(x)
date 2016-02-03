@@ -1,0 +1,34 @@
+/*
+Implement int sqrt(int x).
+
+Compute and return the square root of x.
+*/
+
+public class Solution {
+    public int mySqrt(int x) {
+        return solution1(x);
+        //return solution2(x);
+    }
+    public int solution1(int x){
+        if(x == 0) return 0;
+        if(x < 4) return 1;
+        int bit = 1 << 16, res = 0;
+        while(bit > 0){
+            res |= bit;
+            if(res > x / res) res ^= bit;
+            bit >>= 1;
+        }
+        return res;
+    }
+    public int solution2(int x){
+        if(x == 0) return 0;
+        if(x < 4) return 1;
+        int lo = 1, hi = x, mid = 0;
+        while(lo < hi){
+            mid = (lo + hi) / 2;
+            if(mid <= x / mid) lo = mid + 1;
+            else hi = mid;
+        }
+        return hi - 1;
+    }
+}
