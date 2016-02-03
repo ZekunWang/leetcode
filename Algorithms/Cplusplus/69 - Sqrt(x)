@@ -1,0 +1,39 @@
+/*
+Implement int sqrt(int x).
+
+Compute and return the square root of x.
+*/
+
+class Solution {
+    int solution1(int x);
+    int solution2(int x);
+public:
+    int mySqrt(int x) {
+        return solution1(x);
+        //return solution2(x);
+    }
+};
+
+int Solution::solution1(int x){
+    if(!x) return 0;
+    if(x < 4) return 1;
+    long bit(1 << 16), res(0);
+    while(bit){
+        res |= bit;
+        if(res * res > x) res ^= bit;
+        bit >>= 1;
+    }
+    return (int)res;
+}
+
+int Solution::solution2(int x){
+    if(!x) return 0;
+    if(x < 4) return 1;
+    int l(1), r(x), mid;
+    while(l < r){
+        mid = (l + r) / 2;
+        if(mid <= x / mid) l = mid + 1;
+        else r = mid;
+    }
+    return r - 1;
+}
