@@ -1,0 +1,67 @@
+/*
+Given two words (beginWord and endWord), and a dictionary's word list, find 
+the length of shortest transformation sequence from beginWord to endWord, such that:
+
+Only one letter can be changed at a time
+Each intermediate word must exist in the word list
+For example,
+
+Given:
+beginWord = "hit"
+endWord = "cog"
+wordList = ["hot","dot","dog","lot","log"]
+As one shortest transformation is "hit" -> "hot" -> "dot" -> "dog" -> "cog",
+return its length 5.
+
+Note:
+Return 0 if there is no such transformation sequence.
+All words have the same length.
+All words contain only lowercase alphabetic characters.
+*/
+
+#include <string>
+#include <unordered_set>
+using namespace std;
+
+class Solution {
+    int findPath(string s, string e, unordered_set<string> &d);
+    void search(string i, unordered_set<string> &d, queue<string> &q);
+public:
+    int ladderLength(string start, string end, unordered_set<string> &dict) {
+        if(start.length() != end.length()) return 0;
+        int res = findPath(start, end, dict);
+        return res;
+    }
+};
+
+int Solution::findPath(string s, string e, unordered_set<string> &d){
+    queue<string> q;
+    d.insert(e);
+    search(s, d, q);
+    int res(2);
+    while(!q.empty()){
+        for(int i = 0, sz = q.size(); i < sz; i++){
+            string tmp(q.front());
+            if(tmp == e) return res;
+            q.pop();
+            search(tmp, d, q);
+        }
+        res++;
+    }
+    return 0;
+}
+
+void Solution::search(string tmp, unordered_set<string> &d, queue<string> &q) {
+    d.erase(tmp);
+    for (int p = 0; p < (int)tmp.length(); p++) {
+        char letter = tmp[p];
+        for (int k = 0; k < 26; k++) { 
+            tmp[p] = 'a' + k;
+            if (d.find(tmp) != d.end()) {
+                q.push(tmp);
+                d.erase(tmp);
+            }
+        }
+        tmp[p] = letter;
+    } 
+} 
