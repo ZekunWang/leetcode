@@ -1,0 +1,60 @@
+/*
+Given a collection of numbers that might contain duplicates, return all possible unique permutations.
+
+For example,
+[1,1,2] have the following unique permutations:
+[1,1,2], [1,2,1], and [2,1,1].
+*/
+
+#include <vector>
+using namespace std;
+
+class Solution {
+    vector<vector<int> > v;
+    void solution1(vector<int> &nums);
+    bool compare(vector<int> &a, vector<int> &b);
+public:
+    vector<vector<int> > permuteUnique(vector<int> &nums) {
+        if(!nums.size()) return v;
+        solution1(nums);
+        return v;
+    }
+};
+
+void Solution::solution1(vector<int> &nums){
+    unordered_set<int> s;
+    v.push_back(vector<int>(1, nums[0]));
+    s.insert(nums[0]);
+    int sz = 1;
+    for(int n = 1; n < nums.size(); n++){
+        int nm = nums[n];
+        for(int i = 0, szt = sz; i < szt; i++){
+            v[i].push_back(nm);
+            vector<int> t(v[i]);
+            for(int j = 0, p = t.size() - 1; j < p; j++){  //swap and push_back
+                if(t[j] == nm) continue;
+                swap(t[j], t[p]);
+                if(s.find(nm) != s.end()){
+                    int k = szt;
+                    while(k < sz && !compare(v[k], t)) k++;
+                    if(k == sz){
+                        v.push_back(t);
+                        sz++;
+                    }
+                }else{
+                    v.push_back(t);
+                    s.insert(nm);
+                    sz++;
+                }
+                swap(t[j], t[p]);
+            }
+        }
+    }
+}
+
+bool Solution::compare(vector<int> &a, vector<int> &b){
+    if(a.size() != b.size()) return false;
+    for(int i = 0; i < a.size(); i++)
+        if(a[i] != b[i]) return false;
+    return true;
+}
