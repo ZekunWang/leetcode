@@ -1,0 +1,52 @@
+/*
+Given a string S and a string T, count the number of distinct subsequences of T in S.
+
+A subsequence of a string is a new string which is formed from the original string by deleting some 
+(can be none) of the characters without disturbing the relative positions of the remaining characters. 
+(ie, "ACE" is a subsequence of "ABCDE" while "AEC" is not).
+
+Here is an example:
+S = "rabbbit", T = "rabbit"
+Return 3.
+*/
+
+#include <string>
+#include <vector>
+using namespace std;
+
+class Solution {
+    int solution1(string S, string T);
+    int solution2(string S, string T);
+public: 
+    int numDistinct(string s, string t) {
+        return solution1(s, t);
+        //return solution2(s, t);
+    }
+};
+
+int Solution::solution1(string S, string T){
+    int row = T.length(), col = S.length();
+    vector<vector<int> > v(row + 1, vector<int>(col + 1, 0));
+    for(int j = 0; j <= col; j++) v[0][j] = 1;
+    for(int i = 1; i <= row; i++){
+        for(int j = 1; j <= col; j++){
+            v[i][j] = v[i][j-1] + (T[i-1] == S[j-1] ? v[i-1][j-1] : 0);
+        }
+    }
+    return v[row][col];
+}
+
+int Solution::solution2(string S, string T){
+    int row = T.length(), col = S.length();
+    vector<int> v(col + 1, 1);
+    for(int i = 1; i <= row; i++){
+        int cur = v[0], nxt = v[0];
+        v[0] = 0;
+        for(int j = 1; j <= col; j++){
+            nxt = v[j];
+            v[j] = v[j-1] + (T[i-1] == S[j-1] ? cur : 0);
+            cur = nxt;
+        }
+    }
+    return v[col];
+}
