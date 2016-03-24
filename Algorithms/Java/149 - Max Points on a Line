@@ -1,0 +1,58 @@
+/*
+  Given n points on a 2D plane, find the maximum number of points that lie on the same straight line.
+*/
+
+/**
+ * Definition for a point.
+ * class Point {
+ *     int x;
+ *     int y;
+ *     Point() { x = 0; y = 0; }
+ *     Point(int a, int b) { x = a; y = b; }
+ * }
+ */
+public class Solution {
+    public int maxPoints(Point[] points) {
+        if (points == null) {
+            return 0;
+        } else if (points.length < 3) {
+            return points.length;
+        }
+        return solution1(points);
+    }
+  
+    private int solution1(Point[] points) {
+        // points[i] can distinguish each points[j] by slope only
+        // can use Integer because points[i] goes through each points[j] once
+        Map<Double, Integer> map = new HashMap<>(); 
+        int result = 0;
+        for (int i = 0; i < points.length - 1; i++) { // find all lines that cross points[i]
+            Point pre = points[i];
+            map.clear();    // slope is finite
+            int same = 1;   // same point, including points[i]
+            int sameX = 0;  // slope is infinite, must be in same line
+            for (int j = i + 1; j < points.length; j++) {
+                Point cur = points[j];
+                if (cur.x == pre.x && cur.y == pre.y) { // same point
+                    same++;
+                } else if (cur.x == pre.x) {    // infinite slope
+                    sameX++;
+                } else {  // slope is finite
+                    double slope = cur.y == pre.y ? 0 : (cur.y - pre.y + 0.0) / (cur.x - pre.x);
+                    Integer cnt = map.get(slope);
+                    if (cnt == null) {
+                        map.put(slope, 1);
+                    } else {
+                        map.put(slope, cnt + 1);   // point[i] is considered in "same"
+                    }
+                }
+            }
+            int most = sameX;
+            for (Integer nm : map.values()) {   // get line that crosses most points
+                most = Math.max(most, nm);
+            }
+            result = Math.max(result, most + same);
+        }
+        return result;
+    }
+}
