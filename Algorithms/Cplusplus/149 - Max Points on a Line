@@ -1,0 +1,52 @@
+/*
+  Given n points on a 2D plane, find the maximum number of points that lie on the same straight line.
+*/
+
+/**
+ * Definition for a point.
+ * struct Point {
+ *     int x;
+ *     int y;
+ *     Point() : x(0), y(0) {}
+ *     Point(int a, int b) : x(a), y(b) {}
+ * };
+ */
+class Solution {
+    int solution1(vector<Point>& points);
+public:
+    int maxPoints(vector<Point>& points) {
+        if (points.size() < 3) {
+            return points.size();
+        }
+        return solution1(points);
+    }
+};
+
+int Solution::solution1(vector<Point>& points) {
+    // points[i] can distinguish each points[j] by slope only
+    // can use Integer because points[i] goes through each points[j] once
+    unordered_map<double, int> map; 
+    int result = 0;
+    for (int i = 0; i < points.size() - 1; i++) { // find all lines that cross points[i]
+        Point pre = points[i];
+        map.clear();    // slope is finite
+        int most = 0;
+        int same = 1;   // same point, including points[i]
+        int sameX = 0;  // slope is infinite, must be in same line
+        for (int j = i + 1; j < points.size(); j++) {
+            Point cur = points[j];
+            if (cur.x == pre.x && cur.y == pre.y) { // same point
+                same++;
+            } else if (cur.x == pre.x) {    // infinite slope
+                sameX++;
+            } else {  // slope is finite
+                double slope = cur.y == pre.y ? 0 : (cur.y - pre.y + 0.0) / (cur.x - pre.x);
+                map[slope]++;   // point[i] is considered in "same"
+                most = max(most, map[slope]);
+            }
+        }
+        most = max(most, sameX) + same;
+        result = max(result, most);
+    }
+    return result;
+}
