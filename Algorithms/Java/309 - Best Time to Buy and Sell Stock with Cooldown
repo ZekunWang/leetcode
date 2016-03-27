@@ -1,0 +1,53 @@
+/*
+Say you have an array for which the ith element is the price of a given stock on day i.
+
+Design an algorithm to find the maximum profit. You may complete as many transactions as you like (ie, buy one and sell 
+one share of the stock multiple times) with the following restrictions:
+
+You may not engage in multiple transactions at the same time (ie, you must sell the stock before you buy again).
+After you sell your stock, you cannot buy stock on next day. (ie, cooldown 1 day)
+Example:
+
+prices = [1, 2, 3, 0, 2]
+maxProfit = 3
+transactions = [buy, sell, cooldown, buy, sell]
+*/
+
+/*
+你可以这样考虑，当你在day i的时候，现在为止的状态分别可能是什么？
+0. 完成了前面的transaction - 现在身上没有股票
+1. 正在进行一个transaction - 身上有一只股票还没卖
+用0，1来标识这两种状态。
+
+dp[i][0] = 
+  day i什么都不做，dp[i-1][1]
+  day i卖出身上的股票，dp[i-1][2] + stock[i]
+dp[i][1] =
+  day i 买入一只股票，dp[i-2][1] - stock[i]
+  day i 什么都不做，dp[i-1][2]
+
+    
+*/
+public class Solution {
+    public int maxProfit(int[] prices) {
+        if (prices == null || prices.length < 2) {
+            return 0;
+        }
+        return solution1(prices);
+    }
+    
+    private int solution1(int[] prices) {
+        int[][] m = new int[prices.length + 1][2];
+        m[0][0] = m[0][1] = m[1][0] = 0;
+        m[1][1] = -prices[0];
+        for (int i = 2; i <= prices.length; i++) {
+            m[i][0] = Math.max(m[i - 1][0], m[i - 1][1] + prices[i - 1]);
+            if (i < 2) {
+                m[i][1] = m[i - 1][1];
+            } else {
+                m[i][1] = Math.max(m[i - 2][0] - prices[i - 1], m[i - 1][1]);
+            }
+        }
+        return m[prices.length][0];
+    }
+}
