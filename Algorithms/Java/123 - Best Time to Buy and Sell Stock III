@@ -44,8 +44,8 @@ public class Solution {
     M[i][j]: max profit of i-th transaction from day 0 to day j
     M[i][j] = max(M[i][j - 1], max(M[i - 1][k] + p[j] - p[k])), k from 0 to j - 1
             = max(M[i][j - 1], p[j] + max(M[i - 1][k] - p[k]))
-            = max(M[i][j - 1], tmp);
-        tmp = Math.max(tmp, M[i - 1][j]);
+            = max(M[i][j - 1], p[j] + tmp);
+        tmp = Math.max(tmp, M[i - 1][j] - p[j]);
     optimization: space O(m*n) -> O(n)
 */
     
