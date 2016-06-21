@@ -1,0 +1,88 @@
+/*
+Say you have an array for which the ith element is the price of a given stock on day i.
+Design an algorithm to find the maximum profit. You may complete at most k transactions.
+
+Note:
+You may not engage in multiple transactions at the same time (ie, you must sell the stock before you buy again).
+*/
+
+public class Solution {
+    public int maxProfit(int k, int[] prices) {
+        if (prices == null || prices.length < 2 || k < 1) {
+            return 0;
+        } else if (k >= (prices.length + 1) / 2) {
+            // k reach max transactions we can make, use stock problem |
+            return maxTransaction(prices);
+        }
+        // 2 solutions extended from stock problem |||
+        return constantSpaceDP(prices, k);
+        //return nSpaceDP(prices, k);
+    }
+    
+    private int maxTransaction(int[] prices) {
+        int res = 0;
+        for (int i = 1; i < prices.length; i++) {
+            res += Math.max(0, prices[i] - prices[i - 1]);
+        }
+        return res;
+    }
+/*
+    sellk[i]: max profit of sellk between p[0] ~ p[i], total transaction is k
+    buyk[i]: max profit of buyk between p[0] ~ p[i], total transaction is k
+    ...
+    sell2[i]: max profit of sell2 between p[0] ~ p[i], total transaction is 2
+    buy2[i]: max profit of buy2 between p[0] ~ p[i], total transaction is 2
+    sell1[i]: max profit of sell1 between p[0] ~ p[i], total transaction is 1
+    buy1[i]: max profit of buy1 between p[0] ~ p[i], total transaction is 1
+    
+    sellk[i] = max(sellk[i - 1], buyk[i - 1] + p[i])
+    buyk[i] = max(buyk[i - 1], sellk_1[i - 1] - p[i])， buyk depends on previous sell k-1
+    ...
+    sell2[i] = max(sell2[i - 1], buy2[i - 1] + p[i])
+    buy2[i] = max(buy2[i - 1], sell1[i - 1] - p[i])， buy2 depends on previous sell1
+    
+    sell1[i] = max(sell1[i - 1], buy1[i - 1] + p[i])
+    buy1[i] = max(buy1[i - 1], -p[i])
+    
+    optimization: space O(kn) -> O(k)
+*/    
+    private int constantSpaceDP(int[] p, int k) {
+        int[] trans = new int[k * 2];
+        for (int i = 1; i < trans.length; i += 2) {
+            trans[i] = Integer.MIN_VALUE;
+        }
+        for (int tp : p) {
+            for (int i = 0; i < trans.length;) {
+                trans[i] = Math.max(trans[i], trans[++i] + tp);
+                trans[i] = Math.max(trans[i], (++i < trans.length ? trans[i] : 0) - tp);
+            }
+        }
+        int res = 0;
+        for (int i = 0; i < trans.length; i += 2) {
+            res = Math.max(res, trans[i]);
+        }
+        return res;
+    }
+    
+/*
+    M[i][j]: max profit of i-th transaction from day 0 to day j
+    M[i][j] = max(M[i][j - 1], max(M[i - 1][k] + p[j] - p[k])), k from 0 to j - 1
+            = max(M[i][j - 1], p[j] + max(M[i - 1][k] - p[k]))
+            = max(M[i][j - 1], tmp);
+        tmp = Math.max(tmp, M[i - 1][j]);
+    optimization: space O(m*n) -> O(n)
+*/
+    
+    private int nSpaceDP(int[] p, int k) {
+        int[] M = new int[p.length];
+        for (int i = 1; i <= k; i++) {
+            int tmp = M[0] - p[0], top;
+            for (int j = 1; j < p.length; j++) {
+                top = M[j];
+                M[j] = Math.max(M[j - 1], tmp + p[j]);
+                tmp = Math.max(tmp, top - p[j]);
+            }
+        }
+        return M[p.length - 1];
+    }
+}
