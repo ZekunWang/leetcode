@@ -22,7 +22,7 @@ public class Solution {
     sell2[i]: max profit of sell2 between p[0] ~ p[i], total transaction is 2
     
     sell2[i] = max(sell2[i - 1], buy2[i - 1] + p[i])
-    buy2[i] = max(buy2[i - 1], sell1[i - 1] - p[i])
+    buy2[i] = max(buy2[i - 1], sell1[i - 1] - p[i])， buy2 depends on previous sell1
     
     sell1[i] = max(sell1[i - 1], buy1[i - 1] + p[i])
     buy1[i] = max(buy1[i - 1], -p[i])
