@@ -27,13 +27,13 @@ public class Solution {
         return res;
     }
 /*
-    sellk[i]: max profit of sellk between p[0] ~ p[i], total transaction is k
-    buyk[i]: max profit of buyk between p[0] ~ p[i], total transaction is k
+    sellk[i]: max profit when have sold upon p[i], total transaction is k
+    buyk[i]: max profit when have bought upon p[i], total transaction is k
     ...
-    sell2[i]: max profit of sell2 between p[0] ~ p[i], total transaction is 2
-    buy2[i]: max profit of buy2 between p[0] ~ p[i], total transaction is 2
-    sell1[i]: max profit of sell1 between p[0] ~ p[i], total transaction is 1
-    buy1[i]: max profit of buy1 between p[0] ~ p[i], total transaction is 1
+    sell2[i]: max profit when have sold upon p[i], total transaction is 2
+    buy2[i]: max profit when have bought upon p[i], total transaction is 2
+    sell1[i]: max profit when have sold upon p[i], total transaction is 1
+    buy1[i]: max profit when have bought upon p[i], total transaction is 1
     
     sellk[i] = max(sellk[i - 1], buyk[i - 1] + p[i])
     buyk[i] = max(buyk[i - 1], sellk_1[i - 1] - p[i])， buyk depends on previous sell k-1
