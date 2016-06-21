@@ -13,6 +13,35 @@ maxProfit = 3
 transactions = [buy, sell, cooldown, buy, sell]
 */
 
+public class Solution {
+    public int maxProfit(int[] prices) {
+        if (prices == null || prices.length < 2) {
+            return 0;
+        }
+        return constantSpaceDP(prices);
+        //return solution1(prices);
+    }
+        
+/*
+    buy[i]: max profit when have brought upon p[i]
+    sell[i]: max profit when has sold upon p[i]
+    
+    buy[i] = max(buy[i - 1], sell[i - 2] - p[i])    // use sell[i - 2], need one day of cooldown
+    sell[i] = max(sell[i - 1], buy[i - 1] + p[i])
+    
+    optimization: space O(2n) -> O(2)
+*/
+    private int constantSpaceDP(int[] p) {
+        int preSell = 0, sell = 0, buy = Integer.MIN_VALUE, tmp;
+        for (int i = 0; i < p.length; i++) {
+            tmp = buy;
+            buy = Math.max(buy, preSell - p[i]);    // buy[i] = max(buy[i - 1], sell[i - 2] - p[i])
+            preSell = sell; // sell[i - 2] = sell[i - 1]
+            sell = Math.max(sell, tmp + p[i]);  // sell[i] = max(sell[i - 1], buy[i - 1] + p[i])
+        }
+        return sell;
+    }
+
 /*
 你可以这样考虑，当你在day i的时候，现在为止的状态分别可能是什么？
 0. 完成了前面的transaction - 现在身上没有股票
@@ -25,17 +54,7 @@ dp[i][0] =
 dp[i][1] =
   day i 买入一只股票，dp[i-2][1] - stock[i]
   day i 什么都不做，dp[i-1][2]
-
-    
 */
-public class Solution {
-    public int maxProfit(int[] prices) {
-        if (prices == null || prices.length < 2) {
-            return 0;
-        }
-        return solution1(prices);
-    }
-    
     private int solution1(int[] prices) {
         int[][] m = new int[prices.length + 1][2];
         m[0][0] = m[0][1] = m[1][0] = 0;
