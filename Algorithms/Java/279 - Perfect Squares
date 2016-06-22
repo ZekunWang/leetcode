@@ -9,6 +9,12 @@ For example, given n = 12, return 3 because 12 = 4 + 4 + 4; given n = 13, return
     m[i] = min(m[i - k * k] + 1), k * k <= i
 */
 
+/*
+    m[i]: min num if number to do squarely sum to i
+    m[1] = 1
+    m[i] = min(m[i - k * k] + 1), k * k <= i
+*/
+
 public class Solution {
     public int numSquares(int n) {
         if (n < 1) {
@@ -20,15 +26,14 @@ public class Solution {
     }
     
     private int solution1(int n) {
-        int[] cnt = new int[n + 1];
-        cnt[0] = 0;
-        cnt[1] = 1;
+        int[] M = new int[n + 1];
+        M[1] = 1;
         for (int i = 2; i <= n; i++) {
-            cnt[i] = i;
+            M[i] = i;
             for (int j = 1; j * j <= i; j++) {
-                cnt[i] = Math.min(cnt[i], cnt[i - j * j] + 1);
+                M[i] = Math.min(M[i], M[i - j * j] + 1);
             }
         }
-        return cnt[n];
+        return M[n];
     }
 }
