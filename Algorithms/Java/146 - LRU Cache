@@ -6,72 +6,75 @@ set(key, value) - Set or insert the value if the key is not already present. Whe
 the least recently used item before inserting a new item.
 */
 
+class ListNode {
+    public int key;
+    public int val;
+    public ListNode next;
+    public ListNode prev;
+    
+    public ListNode(int key, int val) {
+        this.key = key;
+        this.val = val;
+    }
+}
+
 public class LRUCache {
-    Map<Integer, Node> map;
-    Node sentinel;
-    int limit;
+    ListNode head;
+    ListNode tail;
+    Map<Integer, ListNode> map;
+    int cap;
     
     public LRUCache(int capacity) {
-        this.limit = capacity;
+        cap = capacity;
+        head = new ListNode(0, 0);
+        tail = new ListNode(0, 0);
+        head.next = tail;
+        tail.prev = head;
         map = new HashMap<>();
-        sentinel = new Node(0, 0, null, null);
-        sentinel.left = sentinel.right = sentinel;
     }
     
     public int get(int key) {
-        Node cur = map.get(key);
-        if (cur != null) {
-            remove(cur);
-            addToHead(cur);
-            return cur.val;
+        ListNode node = map.get(key);
+        if (node == null) {
+            return -1;
         }
-        return -1;
+        refresh(node);
+        return node.val;
     }
     
     public void set(int key, int value) {
-        Node cur = map.get(key);
-        if (cur == null) {    // add new node
-            cur = new Node(key, value, null, null);
-            if (map.size() == limit) {  // check if cache is full
-                deleteFromTail();   // delete tail if cache is full
+        ListNode node = map.get(key);
+        if (node == null) { // node not exists
+            if (map.size() == cap) {    // cache full, remove tailing data node
+                map.remove(tail.prev.key);
+                del(tail.prev);
             }
-            map.put(key, cur);
-        } else {
-            remove(cur);
+            node = new ListNode(key, value);
+            map.put(key, node);
+            add(node);
+        } else {    // node exists
+            node.val = value;
+            refresh(node);
         }
-        cur.val = value;
-        addToHead(cur);
     }
-  
-    private void deleteFromTail() {     // remove LRU node from cache
-        Node tail = sentinel.left;
-        remove(tail);
-        map.remove(tail.key);
-    }
-  
-    private void remove(Node node) {    // remove node from cache
-        node.left.right = node.right;
-        node.right.left = node.left;
-    }
-  
-    private void addToHead(Node node) {
-        sentinel.right.left = node;       // node <- head
-        node.right = sentinel.right;      // node -> head
-        node.left = sentinel;             // sentinel <- node
-        sentinel.right = node;            // sentinel -> node
-    }
-  
-    public class Node {
-        public int key;
-        public int val;
-        public Node left;
-        public Node right;
-    
-        public Node(int key, int val, Node left, Node right) {
-            this.key = key;
-            this.val = val;
-            this.left = left;
-            this.right = right;
+    // cache hit, refresh node
+    private void refresh(ListNode node) {
+        if (map.size() > 1) {
+            del(node);  // delete from current pos
+            add(node);  // update to head of list
         }
+    }
+    // add from head
+    private void add(ListNode node) {
+        node.next = head.next;
+        node.next.prev = node;
+        
+        head.next = node;
+        node.prev = head;
+    }
+    // delete list
+    private void del(ListNode node) {
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
     }
 }
