@@ -13,38 +13,17 @@ return 10.
 
 
 public class Solution {
-    public int largestRectangleArea(int[] heights) {
-    return solution1(heights);
-    //return solution2(heights);
-  }
-  
-  private int solution2(int[] array) {
-    LinkedList<Integer> stack = new LinkedList<>();
-    int largest = 0;
-    for (int i = 0; i <= array.length; i++) {
-      int cur = i < array.length ? array[i] : 0;
-      while (!stack.isEmpty() && array[stack.peek()] >= cur) {
-        int height = array[stack.pop()];
-        int left = stack.isEmpty() ? 0 : (stack.peek() + 1);
-        largest = Math.max(largest, height * (i - left));
-      }
-      stack.push(i);
+    public int largestRectangleArea(int[] ar) {
+        Deque<Integer> st = new LinkedList<>();
+        int res = 0, cur, height;
+        for (int i = 0; i <= ar.length; i++) {
+            cur = i < ar.length ? ar[i] : 0;
+            while (!st.isEmpty() && ar[st.peekFirst()] > cur) {
+                height = ar[st.pollFirst()];
+                res = Math.max(res, height * (!st.isEmpty() ? i - st.peekFirst() - 1 : i));
+            }
+            st.offerFirst(i);
+        }
+        return res;
     }
-    return largest;
-  }
-  
-  private int solution1(int[] array) {
-    int largest = 0;
-    for (int i = 0; i < array.length; i++) {
-      int left = i, right = i, height = array[i];
-      while (left > 0 && array[left - 1] >= height) {
-        left--;
-      }
-      while (right < array.length - 1 && array[right + 1] >= height) {
-        right++;
-      }
-      largest = Math.max(largest, (right - left + 1) * height);
-    }
-    return largest;
-  }
 }
