@@ -14,19 +14,27 @@ You may assume that duplicates do not exist in the tree.
  *     TreeNode(int x) { val = x; }
  * }
  */
+
 public class Solution {
     public TreeNode buildTree(int[] inorder, int[] postorder) {
-        return solution1(inorder, 0, inorder.length - 1, postorder, 0, postorder.length - 1);
+        return recursion(inorder, 0, inorder.length - 1, postorder, 0, postorder.length - 1);
     }
-    public TreeNode solution1(int[] in, int lin, int rin, int[] po, int lpo, int rpo){
-        if(lin > rin) return null;
-        if(lin == rin) return new TreeNode(po[rpo]);
-        int pos = lin, tg = po[rpo];
-        TreeNode node = new TreeNode(tg);
-        while(in[pos] != tg) pos++;
-        int cnt = rin - pos;
-        node.right = solution1(in, pos + 1, rin, po, rpo - cnt, rpo - 1);
-        node.left = solution1(in, lin, pos - 1, po, lpo, rpo - cnt - 1);
+    
+    private TreeNode recursion(int[] in, int inLo, int inHi, 
+            int[] po, int poLo, int poHi) {
+        if (inLo > inHi) {
+            return null;
+        } else if (inLo == inHi) {
+            return new TreeNode(in[inLo]);
+        }
+        TreeNode node = new TreeNode(po[poHi]);
+        int pos = inLo;
+        while (in[pos] != node.val) {
+            pos++;
+        }
+        int tmp = poLo + pos - inLo;
+        node.left = recursion(in, inLo, pos - 1, po, poLo, tmp - 1);
+        node.right = recursion(in, pos + 1, inHi, po, tmp, poHi - 1);
         return node;
     }
 }
