@@ -10,22 +10,25 @@
  */
 public class Solution {
     public ListNode insertionSortList(ListNode head) {
-        return solution1(head);
-    }
-    public ListNode solution1(ListNode head){
-        if(head == null || head.next == null) return head;
-        ListNode nhead = new ListNode(0), cur = head, chk = nhead;
-        nhead.next = head;
-        while(cur.next != null){
-            if(chk.next.val > cur.next.val) chk = nhead;
-            while(chk.next.val < cur.next.val) chk = chk.next;
-            if(chk != cur){
-                ListNode tmp = cur.next;
-                cur.next = tmp.next;
-                tmp.next = chk.next;
-                chk.next = tmp;
-            }else cur = cur.next;
+        if (head == null || head.next == null) {
+            return head;
         }
-        return nhead.next;
+        ListNode dummy = new ListNode(0), pre = dummy, cur = null;
+        dummy.next = head;
+        while (pre.next != null) {
+            cur = pre.next;
+            ListNode i = dummy;
+            while (i.next.val < cur.val) {
+                i = i.next;
+            }
+            if (i == pre) {
+                pre = pre.next;
+            } else {
+                pre.next = cur.next;
+                cur.next = i.next;
+                i.next = cur;
+            }
+        }
+        return dummy.next;
     }
 }
