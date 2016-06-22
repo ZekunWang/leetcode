@@ -9,27 +9,44 @@ dict = ["leet", "code"].
 Return true because "leetcode" can be segmented as "leet code".
 */
 
-import java.util.*;
+/*
+    M[i]: if substring of 0-th to i-th char is breakable or not
+    M[i] = M[k] && subString(k + 1, i) is valid, k from 0 to i - 1 OR subString(0, i) is valid
+*/
 
 public class Solution {
-    public boolean wordBreak(String s, Set<String> dict) {
-        return solution1(s, dict);
+    public boolean wordBreak(String s, Set<String> wordDict) {
+        if (s == null) {
+            return false;
+        }
+        return solution1(s, wordDict);
     }
-    public boolean solution1(String s, Set<String> dict){
-        if(s == null || dict == null) return false;
-        int sz = s.length(), maxLen = 0;
-        if(sz == 0) return true;
-        for(String st : dict) maxLen = Math.max(maxLen, st.length());
-        boolean[] chk = new boolean[sz + 1];
-        chk[0] = true;
-        for(int i = 1; i <= sz; i++){
-            for(int j = i - 1; j >= 0 && i - j <= maxLen; j--){
-                if(chk[j] && dict.contains(s.substring(j, i))){
-                    chk[i] = true;
+    
+    private boolean solution1(String s, Set<String> wordDict) {
+        StringBuilder sb = null;
+        boolean[] M = new boolean[s.length()];
+        int len = 0;
+        for (String str : wordDict) {
+            len = Math.max(len, str.length());
+        }
+        for (int i = s.length() - 1; i >= 0; i--) {
+            sb = new StringBuilder();
+            int j = i + 1;
+            int bound = Math.max(s.length(), i + len);
+            while (j < s.length()) {
+                sb.append(s.charAt(j - 1));
+                if (M[j] && wordDict.contains(sb.toString())) {
+                    M[i] = true;
                     break;
+                }
+                j++;
+            }
+            if (!M[i] && j == s.length()) {
+                if (wordDict.contains(sb.append(s.charAt(j - 1)).toString())) {
+                    M[i] = true;
                 }
             }
         }
-        return chk[sz];
+        return M[0];
     }
 }
