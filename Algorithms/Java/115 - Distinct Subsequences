@@ -12,35 +12,49 @@ Return 3.
 
 public class Solution {
     public int numDistinct(String s, String t) {
-        return solution1(s, t);
-        //return solution2(s, t);
+        if (s == null || t == null) {
+            return 0;
+        }
+        return nSpaceDP(s, t);
+        //return mnSpaceDP(s, t);
     }
-    public int solution1(String S, String T){
-        if(S == null || T == null) return Integer.MAX_VALUE;
-        int row = T.length(), col = S.length();
-        int[][] cnt = new int[row+1][col+1];
-        for(int j = 0; j <= col; j++) cnt[0][j] = 1;
-        for(int i = 1; i <= row; i++){
-            for(int j = 1; j <= col; j++){
-                cnt[i][j] = cnt[i][j-1] + (T.charAt(i-1) == S.charAt(j-1) ? cnt[i-1][j-1] : 0);
+    
+/*
+    M[i][j]: cnt of distinct subsequences found of t[0~i] in s[0~j]
+    M[i][j] = M[i][j - 1] + M[i - 1][j - 1] if t[i] = s[j]
+            = M[i][j - 1] else
+    base case:
+    M[0][j] = 1
+    
+    optimization: space O(m*n) -> O(n)
+*/
+    private int nSpaceDP(String s, String t) {
+        int[] M = new int[s.length() + 1];
+        for (int j = 0; j < s.length(); j++) {
+            M[j] = 1;
+        }
+        for (int i = 1; i <= t.length(); i++) {
+            int topLeft = M[0], top;
+            M[0] = 0;
+            for (int j = 1; j <= s.length(); j++) {
+                top = M[j];
+                M[j] = M[j - 1] + (t.charAt(i - 1) == s.charAt(j - 1) ? topLeft : 0);
+                topLeft = top;
             }
         }
-        return cnt[row][col];
+        return M[s.length()];
     }
-    public int solution2(String S, String T){
-        if(S == null || T == null) return Integer.MAX_VALUE;
-        int row = T.length(), col = S.length();
-        int[] cnt = new int[col+1];
-        for(int j = 0; j <= col; j++) cnt[j] = 1;
-        for(int i = 1; i <= row; i++){
-            int nxt = 0, cur = cnt[0];
-            cnt[0] = 0;
-            for(int j = 1; j <= col; j++){
-                nxt = cnt[j];
-                cnt[j] = cnt[j-1] + (T.charAt(i-1) == S.charAt(j-1) ? cur : 0);
-                cur = nxt;
+    
+    private int mnSpaceDP(String s, String t) {
+        int[][] M = new int[t.length() + 1][s.length() + 1];
+        for (int j = 0; j < s.length(); j++) {
+            M[0][j] = 1;
+        }
+        for (int i = 1; i <= t.length(); i++) {
+            for (int j = 1; j <= s.length(); j++) {
+                M[i][j] = M[i][j - 1] + (t.charAt(i - 1) == s.charAt(j - 1) ? M[i - 1][j - 1] : 0);
             }
         }
-        return cnt[col];
+        return M[t.length()][s.length()];
     }
 }
