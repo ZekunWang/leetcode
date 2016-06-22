@@ -13,11 +13,14 @@ After third round, the three bulbs are [on, off, off].
 So you should return 1, because there is only one bulb is on.
 */
 
+/*
+    from 1 to n, 1 switch bulb[1], 1,2 switch bulb[2], 1,8,2,4 switch bulb[8], 1,9,3 switch bulb[9]
+    odd num of switches turn off bulb, even num of switches turn on bulb
+    so only 1*1, 2*2, 3*3 ... will remain on
+*/
+
 public class Solution {
     public int bulbSwitch(int n) {
-        // java.lang.Math.sqrt(); is used
-        // java.lang.* is the only package imported by default
-        // String = java.lang.String and System = java.lang.System
-        return (int)Math.sqrt(n);
+        return (int) Math.sqrt(n);
     }
 }
