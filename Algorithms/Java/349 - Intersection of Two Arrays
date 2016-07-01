@@ -23,6 +23,7 @@ public class Solution {
         for (int num : nums2) {
             if (set.contains(num)) {
                 intersect.add(num);
+                set.remove(num);    // remove is O(1)
             }
         }
         int[] res = new int[intersect.size()];
