@@ -1,0 +1,52 @@
+/*
+Implement strStr().
+
+Returns the index of the first occurrence of needle in haystack, or -1 if needle is not part of haystack.
+*/
+
+public class Solution {
+    public int strStr(String haystack, String needle) {
+        if (haystack == null || needle == null || haystack.length() < needle.length()) {
+            return -1;
+        }
+        return twoLoops(haystack, needle);
+        //return withCode(haystack, needle);
+    }
+    
+    private int twoLoops(String hs, String nd) {
+        int len = nd.length();
+        for (int i = 0; i <= hs.length() - nd.length(); i++) {
+            int j = 0;
+            while (j < nd.length()) {
+                if (hs.charAt(i + j) != nd.charAt(j)) {
+                    break;
+                }
+                j++;
+            }
+            if (j == nd.length()) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    
+    private int withCode(String hs, String nd) {
+        int len = nd.length();
+        long tg = 0, cal = 0, scale = (long) Math.pow(31, len - 1);
+        for (int i = 0; i < len; i++) {
+            tg = tg * 31 + nd.charAt(i) - '@';
+            cal = cal * 31 + hs.charAt(i) - '@';
+        }
+        if (tg == cal) {
+            return 0;
+        }
+        for (int i = len; i < hs.length(); i++) {
+            cal = cal - (hs.charAt(i - len) - '@') * scale; // delete first char
+            cal = cal * 31 + hs.charAt(i) - '@';    // add new char
+            if (tg == cal) {
+                return i - len + 1;
+            }
+        }
+        return -1;
+    }
+}
