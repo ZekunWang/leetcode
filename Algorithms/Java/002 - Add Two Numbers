@@ -21,35 +21,35 @@ public class Solution {
         } else if (l2 == null) {
             return l1;
         }
-        int cin = 0, cur = 0;
-        ListNode dummy = new ListNode(0), tmp = dummy;
+        ListNode dummy = new ListNode(0), cur = dummy;
+        int carry = 0;
         while (l1 != null && l2 != null) {
-            cur = l1.val + l2.val + cin;
-            cin = cur / 10;    // accumulate cin
-            cur %= 10;  // get remainder
-            tmp.next = new ListNode(cur);
-            tmp = tmp.next;
+            carry = l1.val + l2.val + carry;
+            cur.next = new ListNode(carry % 10);
+            carry /= 10;
+            
+            cur = cur.next;
             l1 = l1.next;
             l2 = l2.next;
         }
         while (l1 != null) {
-            cur = l1.val + cin;
-            cin = cur / 10;    // accumulate cin
-            cur %= 10;  // get remainder
-            tmp.next = new ListNode(cur);
-            tmp = tmp.next;
+            carry = l1.val + carry;
+            cur.next = new ListNode(carry % 10);
+            carry /= 10;
+            
+            cur = cur.next;
             l1 = l1.next;
         }
         while (l2 != null) {
-            cur = l2.val + cin;
-            cin = cur / 10;    // accumulate cin
-            cur %= 10;  // get remainder
-            tmp.next = new ListNode(cur);
-            tmp = tmp.next;
+            carry = l2.val + carry;
+            cur.next = new ListNode(carry % 10);
+            carry /= 10;
+            
+            cur = cur.next;
             l2 = l2.next;
         }
-        if (cin > 0) {
-            tmp.next = new ListNode(cin);
+        if (carry != 0) {
+            cur.next = new ListNode(carry);
         }
         return dummy.next;
     }
