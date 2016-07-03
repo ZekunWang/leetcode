@@ -11,47 +11,27 @@ Given "pwwkew", the answer is "wke", with the length of 3. Note that the answer 
 
 public class Solution {
     public int lengthOfLongestSubstring(String s) {
-        if (s == null || s.length() == 0) {
+        if (s == null) {
             return 0;
+        } else if (s.length() < 2) {
+            return s.length();
         }
-        //return usingMap(s);
-        return usingSet(s);
-    }
-    
-    private int usingMap(String s) {
-        Map<Character, Integer> map = new HashMap<>();
-        int i = 0, j = 0, res = 0;
-        while (j < s.length()) {
-            char head = s.charAt(j);
-            Integer idx = map.get(head);
-            if (idx != null) {
-                res = Math.max(res, j - i);
-                while (i < idx) {
-                    map.remove(s.charAt(i++));
-                }
-                i++;
-            }
-            map.put(head, j++);
-        }
-        res = Math.max(res, j - i);
-        return res;
-    }
-    
-    private int usingSet(String s) {
         Set<Character> set = new HashSet<>();
-        int i = 0, j = 0, res = 0;
-        while (j < s.length()) {
-            char head = s.charAt(j);
-            if (!set.add(head)) {
-                res = Math.max(res, j - i);
-                while (i < j && s.charAt(i) != head) {
-                    set.remove(s.charAt(i++));
+        int res = 0;
+        for (int tail = 0; tail < s.length(); tail++) {
+            char tailChar = s.charAt(tail);
+            if (!set.add(tailChar)) { // reach end of cur nonreaping substring
+                res = Math.max(res, set.size());    // update res
+                for (int head = tail - set.size(); head < tail; head++) {
+                    char headChar = s.charAt(head);
+                    if (headChar == tailChar) {
+                        break;
+                    }
+                    set.remove(headChar);
                 }
-                i++;
             }
-            j++;
         }
-        res = Math.max(res, j - i);
+        res = Math.max(res, set.size());
         return res;
     }
 }
