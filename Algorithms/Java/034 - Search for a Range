@@ -13,33 +13,28 @@ return [3, 4].
 public class Solution {
     public int[] searchRange(int[] nums, int target) {
         int[] res = new int[]{-1, -1};
-        if (nums == null) {
+        if (nums == null || nums.length == 0) {
             return res;
         }
-        res[0] = binarySearch(nums, target);
+        res[0] = binarySearch(nums, 0, nums.length - 1, target);
         if (res[0] < nums.length && nums[res[0]] == target) {
-            res[1] = binarySearch(nums, target + 1) - 1;
+            res[1] = binarySearch(nums, res[0] + 1, nums.length - 1, target + 1) - 1;
         } else {
             res[0] = -1;
         }
         return res;
     }
     
-    private int binarySearch(int[] ar, int tg) {
-        int left = 0, right = ar.length - 1, mid;
-        while (left + 1 < right) {
+    private int binarySearch(int[] ar, int left, int right, int target) {
+        int mid;
+        while (left < right) {
             mid = left + (right - left) / 2;
-            if (ar[mid] >= tg) {
+            if (ar[mid] >= target) {
                 right = mid;
             } else {
-                left = mid;
+                left = mid + 1;
             }
         }
-        if (ar[left] >= tg) {
-            return left;
-        } else if (ar[right] >= tg) {
-            return right;
-        }
-        return right + 1;
+        return ar[right] < target ? right + 1 : right;
     }
 }
