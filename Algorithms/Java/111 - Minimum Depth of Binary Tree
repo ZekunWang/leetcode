@@ -1,0 +1,57 @@
+/*
+Given a binary tree, find its minimum depth.
+
+The minimum depth is the number of nodes along the shortest path from the root node down to the nearest leaf node.
+*/
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public int minDepth(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        return iteration(root);
+        //return recursion(root, 0);
+    }
+    
+    private int iteration(TreeNode root) {
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        int lvl = 1;
+        while (!queue.isEmpty()) {
+            for (int i = queue.size(); i > 0; i--) {
+                TreeNode cur = queue.poll();
+                if (cur.left == null && cur.right == null) {
+                    return lvl;
+                }
+                if (cur.left != null) {
+                    queue.offer(cur.left);
+                }
+                if (cur.right != null) {
+                    queue.offer(cur.right);
+                }
+            }
+            lvl++;
+        }
+        return 0;
+    }
+    
+    private int recursion(TreeNode root, int dep) {
+        if (root == null) {
+            return Integer.MAX_VALUE;
+        } else if (root.left == null && root.right == null) {
+            return dep + 1;
+        }
+        int left = recursion(root.left, dep + 1);
+        int right = recursion(root.right, dep + 1);
+        return Math.min(left, right);
+    }
+}
