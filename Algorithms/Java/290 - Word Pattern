@@ -1,0 +1,91 @@
+/*
+Given a pattern and a string str, find if str follows the same pattern.
+
+Here follow means a full match, such that there is a bijection between a letter in pattern and a non-empty word in str.
+
+Examples:
+pattern = "abba", str = "dog cat cat dog" should return true.
+pattern = "abba", str = "dog cat cat fish" should return false.
+pattern = "aaaa", str = "dog cat cat dog" should return false.
+pattern = "abba", str = "dog dog dog dog" should return false.
+Notes:
+You may assume pattern contains only lowercase letters, and str contains lowercase letters separated by a single space.
+*/
+
+public class Solution {
+    public boolean wordPattern(String pattern, String str) {
+        return withArray(pattern, str);
+        //return withMap(pattern, str);
+    }
+    
+    private boolean withArray(String pattern, String str) {
+        int[] idx = new int[]{0};
+        int[] check = new int[26];
+        Set<Integer> set = new HashSet<>();
+        for (int i = 0; i < pattern.length(); i++) {
+            int ch = pattern.charAt(i) - 'a';
+            int s = getCode(str, idx);
+            if (s == 0) {    // still has pattern, but no word
+                return false;
+            }
+            if (check[ch] == 0) {  // pattern no found
+                if (!set.add(s)) {  // word exist
+                    return false;
+                }
+                check[ch] = s; // word not exist, update map
+            } else if (check[ch] != s) { // pattern found, val not equals to word
+                return false;
+            }
+        }
+        return idx[0] >= str.length();
+    }
+    
+    private int getCode(String s, int[] idx) {
+        int res = 0;
+        char ch = 0;
+        while (idx[0] < s.length()) {
+            ch = s.charAt(idx[0]++);
+            if (ch == ' ') {
+                return res;
+            }
+            res = res * 31 + ch - 96;
+        }
+        return res;
+    }
+    
+    private boolean withMap(String pattern, String str) {
+        int[] idx = new int[]{0};
+        Map<Character, String> map = new HashMap<>();
+        Set<String> set = new HashSet<>();
+        for (int i = 0; i < pattern.length(); i++) {
+            char ch = pattern.charAt(i);
+            String s = getWord(str, idx);
+            if (s.length() == 0) {    // still has pattern, but no word
+                return false;
+            }
+            String val = map.get(ch);
+            if (val == null) {  // pattern no found
+                if (!set.add(s)) {  // word exist
+                    return false;
+                }
+                map.put(ch, s); // word not exist, update map
+            } else if (!val.equals(s)) { // pattern found, val not equals to word
+                return false;
+            }
+        }
+        return idx[0] >= str.length();
+    }
+    
+    private String getWord(String s, int[] idx) {
+        StringBuilder sb = new StringBuilder();
+        char ch = 0;
+        while (idx[0] < s.length()) {
+            ch = s.charAt(idx[0]++);
+            if (ch == ' ') {
+                return sb.toString();
+            }
+            sb.append(ch);
+        }
+        return sb.toString();
+    }
+}
