@@ -1,0 +1,47 @@
+/*
+Given a digit string, return all possible letter combinations that the number could represent.
+A mapping of digit to letters (just like on the telephone buttons) is given below.
+1         2(abc)    3(def)
+4(ghi)    5(jkl)    6(mno)
+7(pqrs)   8(tuv)    9(wxyz)
+
+Input:Digit string "23"
+Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
+Note:
+Although the above answer is in lexicographical order, your answer could be in any order you want.
+*/
+
+/*
+    similar to coins combination, use recursion, each digit represents a layer, 
+    each layer will have 3 or 4 char to try, total time is O(4^n)
+*/
+
+public class Solution {
+    public List<String> letterCombinations(String digits) {
+        List<String> list = new ArrayList<>();
+        if (digits == null || digits.length() == 0) {
+            return list;
+        }
+        recursion(new StringBuilder(), digits, 0, list);
+        return list;
+    }
+    
+    private void recursion(StringBuilder sb, String digits, int idx, List<String> list) {
+        if (idx == digits.length()) {
+            list.add(sb.toString());
+            return;
+        }
+        sb.append('0');     // add state for current recursion layer
+        int dig = digits.charAt(idx) - '0';
+        char ch = (char)('a' + (dig - 2) * 3 + (dig > 7 ? 1 : 0));  // 'a' skips 3 * (dig - 2) chars, need to skip 1 more if > 7, because 7 has 4 chars
+        for (int i = 0; i < 3; i++) {   // try 3 possible chars
+            sb.setCharAt(idx, (char)(ch + i));
+            recursion(sb, digits, idx + 1, list);
+        }
+        if (dig == 7 || dig == 9) {     // try 1 more char if dig == 7 or 9
+            sb.setCharAt(idx, (char)(ch + 3));
+            recursion(sb, digits, idx + 1, list);
+        }
+        sb.deleteCharAt(idx);     // remove state for current recursion layer
+    }
+}
