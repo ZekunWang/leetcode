@@ -1,0 +1,76 @@
+/*
+Given an integer n, generate a square matrix filled with elements from 1 to n2 in spiral order.
+
+For example,
+Given n = 3,
+
+You should return the following matrix:
+[
+ [ 1, 2, 3 ],
+ [ 8, 9, 4 ],
+ [ 7, 6, 5 ]
+]
+*/
+
+public class Solution {
+    public int[][] generateMatrix(int n) {
+        if (n < 0) {
+            return null;
+        } else if (n == 0) {
+            return new int[0][0];
+        }
+        int[][] matrix = new int[n][n];
+        //iteration(0, n, 1, matrix);
+        recursion(0, n, 1, matrix);
+        return matrix;
+    }
+     
+    private void iteration(int begin, int size, int value, int[][] matrix) {
+        while (size > 1) {
+            for (int j = 0; j < size - 1; j++) {   // top
+                matrix[begin][begin + j] = value++;
+            }
+            int last = matrix.length - 1 - begin;
+            for (int i = 0; i < size - 1; i++) {  // right
+                matrix[begin + i][last] = value++;
+            }
+            for (int j = size - 1; j > 0; j--) {   // bottom
+                matrix[last][begin + j] = value++;
+            }
+            for (int i = size - 1; i > 0; i--) {  // left
+                matrix[begin + i][begin] = value++;
+            }
+            begin++;
+            size -= 2;
+        }
+        
+        if (size == 1) {
+            matrix[begin][begin] = value++;
+        }
+    }
+    
+    private void recursion(int begin, int size, int value, int[][] matrix) {
+        if (size == 0) {
+            return;
+        } else if (size == 1) {
+            matrix[begin][begin] = value++;
+            return;
+        }
+        
+        for (int j = 0; j < size - 1; j++) {   // top
+            matrix[begin][begin + j] = value++;
+        }
+        int last = matrix.length - 1 - begin;
+        for (int i = 0; i < size - 1; i++) {  // right
+            matrix[begin + i][last] = value++;
+        }
+        for (int j = size - 1; j > 0; j--) {   // bottom
+            matrix[last][begin + j] = value++;
+        }
+        for (int i = size - 1; i > 0; i--) {  // left
+            matrix[begin + i][begin] = value++;
+        }
+        
+        recursion(begin + 1, size - 2, value, matrix);
+    }
+}
