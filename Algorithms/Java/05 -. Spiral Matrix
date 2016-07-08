@@ -1,0 +1,91 @@
+/*
+Given a matrix of m x n elements (m rows, n columns), return all elements of the matrix in spiral order.
+
+For example,
+Given the following matrix:
+[
+ [ 1, 2, 3 ],
+ [ 4, 5, 6 ],
+ [ 7, 8, 9 ]
+]
+You should return [1,2,3,6,9,8,7,4,5].
+*/
+
+public class Solution {
+    public List<Integer> spiralOrder(int[][] matrix) {
+        List<Integer> list = new ArrayList<>();
+        if (matrix == null || matrix.length == 0 ||
+                matrix[0].length == 0) {
+            return list;
+        }
+        iteration(matrix, list);
+        //recursion(0, matrix[0].length, matrix.length, matrix, list);
+        return list;
+    }
+    
+    private void iteration(int[][] matrix, List<Integer> list) {
+        int begin = 0, width = matrix[0].length, height = matrix.length;
+        while (width > 1 && height > 1) {
+            for (int j = 0; j < width - 1; j++) {   // top
+                list.add(matrix[begin][begin + j]);
+            }
+            int lastColumn = matrix[0].length - 1 - begin;
+            for (int i = 0; i < height - 1; i++) {  // right
+                list.add(matrix[begin + i][lastColumn]);
+            }
+            int lastRow = matrix.length - 1 - begin;
+            for (int j = width - 1; j > 0; j--) {   // bottom
+                list.add(matrix[lastRow][begin + j]);
+            }
+            for (int i = height - 1; i > 0; i--) {  // left
+                list.add(matrix[begin + i][begin]);
+            }
+            begin++;
+            width -= 2;
+            height -= 2;
+        }
+        
+        if (width == 1) {
+            for (int i = 0; i < height; i++) {
+                list.add(matrix[begin + i][begin]);
+            }
+        } else if (height == 1) {
+            for (int j = 0; j < width; j++) {
+                list.add(matrix[begin][begin + j]);
+            }
+        }
+    }
+    
+    private void recursion(int begin, int width, int height, int[][] matrix, List<Integer> list) {
+        if (width == 0 || height == 0) {
+            return;
+        } else if (width == 1) {
+            for (int i = 0; i < height; i++) {
+                list.add(matrix[begin + i][begin]);
+            }
+            return;
+        } else if (height == 1) {
+            for (int j = 0; j < width; j++) {
+                list.add(matrix[begin][begin + j]);
+            }
+            return;
+        }
+        
+        for (int j = 0; j < width - 1; j++) {   // top
+            list.add(matrix[begin][begin + j]);
+        }
+        int lastColumn = matrix[0].length - 1 - begin;
+        for (int i = 0; i < height - 1; i++) {  // right
+            list.add(matrix[begin + i][lastColumn]);
+        }
+        int lastRow = matrix.length - 1 - begin;
+        for (int j = width - 1; j > 0; j--) {   // bottom
+            list.add(matrix[lastRow][begin + j]);
+        }
+        for (int i = height - 1; i > 0; i--) {  // left
+            list.add(matrix[begin + i][begin]);
+        }
+        
+        recursion(begin + 1, width - 2, height - 2, matrix, list);
+    }
+}
