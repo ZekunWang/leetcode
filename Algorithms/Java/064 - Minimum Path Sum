@@ -1,0 +1,65 @@
+/*
+Given a m x n grid filled with non-negative numbers, find a path from top left to 
+bottom right which minimizes the sum of all numbers along its path.
+
+Note: You can only move either down or right at any point in time.
+*/
+
+/*
+    2D-input + similar elements, use 2D-DP
+    M[i][j]: min path sum from top left corner to M[i][j]
+    M[i][j] = min(M[i][j - 1], M[i - 1][j]) + grid[i][j]
+    M[0][0] = grid[0][0]
+    M[0][j] = M[0][j - 1] + grid[0][j]
+    M[i][0] = M[i - 1][0] + grid[i][0]
+    optimization: space: O(m*n) -> O(n)
+*/
+
+public class Solution {
+    public int minPathSum(int[][] grid) {
+        //return nSpaceDP(grid);
+        return mnSpaceDP(grid);
+    }
+    
+    private int mnSpaceDP(int[][] m) {
+        if (m == null || m.length == 0 || 
+                m[0] == null || m[0].length == 0) {
+            return 0;
+        }
+        int rows = m.length, cols = m[0].length;
+        int[][] M = new int[rows][cols];
+        M[0][0] = m[0][0];
+        for (int i = 1; i < rows; i++) {
+            M[i][0] = M[i - 1][0] + m[i][0];
+        }
+        for (int j = 1; j < cols; j++) {
+            M[0][j] = M[0][j - 1] + m[0][j];
+        }
+        for (int i = 1; i < rows; i++) {
+            for (int j = 1; j < cols; j++) {
+                M[i][j] = m[i][j] + Math.min(M[i - 1][j], M[i][j - 1]);
+            }
+        }
+        return M[rows - 1][cols - 1];
+    }
+    
+    private int nSpaceDP(int[][] m) {
+        if (m == null || m.length == 0 || 
+                m[0] == null || m[0].length == 0) {
+            return 0;
+        }
+        int rows = m.length, cols = m[0].length;
+        int[] M = new int[cols];
+        M[0] = m[0][0];
+        for (int j = 1; j < cols; j++) {
+            M[j] = M[j - 1] + m[0][j];
+        }
+        for (int i = 1; i < rows; i++) {
+            M[0] += m[i][0];
+            for (int j = 1; j < cols; j++) {
+                M[j] = m[i][j] + Math.min(M[j], M[j - 1]);
+            }
+        }
+        return M[cols - 1];
+    }
+}
