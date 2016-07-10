@@ -1,0 +1,51 @@
+/*
+Given an absolute path for a file (Unix-style), simplify it.
+
+For example,
+path = "/home/", => "/home"
+path = "/a/./b/../../c/", => "/c"
+
+Corner Cases:
+Did you consider the case where path = "/../"?
+In this case, you should return "/".
+Another corner case is the path might contain multiple slashes '/' together, such as "/home//foo/".
+In this case, you should ignore redundant slashes and return "/home/foo".
+*/
+
+public class Solution {
+    public String simplifyPath(String path) {
+        if (path == null) {
+            return null;
+        }
+        StringBuilder sb = new StringBuilder();
+        int[] pos = new int[]{0};
+        while (pos[0] < path.length()) {
+            String name = getName(path, pos);
+            if (name.length() == 0 || name.equals(".")) {
+                continue;
+            } else if (name.equals("..")) {
+                for (int i = sb.length() - 1; i >= 0 && sb.charAt(i) != '/'; i--) {
+                    sb.deleteCharAt(i);
+                }
+                if (sb.length() > 0) {
+                    sb.deleteCharAt(sb.length() - 1);
+                }
+            } else {
+                sb.append('/');
+                sb.append(name);
+            }
+        }
+        return sb.length() == 0 ? "/" : sb.toString();
+    }
+    
+    private String getName(String path, int[] pos) {
+        StringBuilder sb = new StringBuilder();
+        while (pos[0] < path.length() && path.charAt(pos[0]) == '/') {
+            pos[0]++;
+        }
+        while (pos[0] < path.length() && path.charAt(pos[0]) != '/') {
+            sb.append(path.charAt(pos[0]++));
+        }
+        return sb.toString();
+    }
+}
