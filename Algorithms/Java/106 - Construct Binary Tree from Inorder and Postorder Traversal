@@ -14,14 +14,12 @@ You may assume that duplicates do not exist in the tree.
  *     TreeNode(int x) { val = x; }
  * }
  */
-
 public class Solution {
     public TreeNode buildTree(int[] inorder, int[] postorder) {
         return recursion(inorder, 0, inorder.length - 1, postorder, 0, postorder.length - 1);
     }
     
-    private TreeNode recursion(int[] in, int inLo, int inHi, 
-            int[] po, int poLo, int poHi) {
+    private TreeNode recursion(int[] in, int inLo, int inHi, int[] po, int poLo, int poHi) {
         if (inLo > inHi) {
             return null;
         } else if (inLo == inHi) {
@@ -29,12 +27,11 @@ public class Solution {
         }
         TreeNode node = new TreeNode(po[poHi]);
         int pos = inLo;
-        while (in[pos] != node.val) {
+        while (pos <= inHi && in[pos] != node.val) {
             pos++;
         }
-        int tmp = poLo + pos - inLo;
-        node.left = recursion(in, inLo, pos - 1, po, poLo, tmp - 1);
-        node.right = recursion(in, pos + 1, inHi, po, tmp, poHi - 1);
+        node.right = recursion(in, pos + 1, inHi, po, poHi - inHi + pos, poHi - 1);
+        node.left = recursion(in, inLo, pos - 1, po, poLo, poHi - inHi + pos - 1);
         return node;
     }
 }
