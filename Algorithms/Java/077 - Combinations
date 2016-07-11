@@ -1,0 +1,40 @@
+/*
+Given two integers n and k, return all possible combinations of k numbers out of 1 ... n.
+
+For example,
+If n = 4 and k = 2, a solution is:
+
+[
+  [2,4],
+  [3,4],
+  [2,3],
+  [1,2],
+  [1,3],
+  [1,4],
+]
+*/
+
+public class Solution {
+    public List<List<Integer>> combine(int n, int k) {
+        List<List<Integer>> list = new ArrayList<>();
+        if (k < 1 || n < k) {
+            return list;
+        }
+        recursion(new ArrayList<Integer>(), 0, k, 1, n, list);
+        return list;
+    }
+    
+    private void recursion(List<Integer> tmp, int idx, int k, 
+            int startNum, int n, List<List<Integer>> list) {
+        if (idx >= k) {
+            list.add(new ArrayList<Integer>(tmp));
+            return;
+        }
+        tmp.add(0); // add state for current recursion layer
+        for (int i = startNum; i <= n - k + idx + 1; i++) {
+            tmp.set(idx, i);
+            recursion(tmp, idx + 1, k, i + 1, n, list);
+        }
+        tmp.remove(idx);
+    }
+}
