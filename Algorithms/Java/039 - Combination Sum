@@ -1,0 +1,49 @@
+/*
+Given a set of candidate numbers (C) and a target number (T), find all unique combinations in C where the candidate numbers sums to T.
+
+The same repeated number may be chosen from C unlimited number of times.
+
+Note:
+All numbers (including target) will be positive integers.
+The solution set must not contain duplicate combinations.
+For example, given candidate set [2, 3, 6, 7] and target 7, 
+A solution set is: 
+[
+  [7],
+  [2, 2, 3]
+]
+*/
+
+public class Solution {
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> list = new ArrayList<>();
+        if (candidates == null || candidates.length == 0) {
+            return list;
+        }
+        recursion(new ArrayList<Integer>(), candidates, 0, target, list);
+        return list;
+    }
+    
+    private void recursion(List<Integer> temp, int[] array, int index, 
+            int target, List<List<Integer>> list) {
+        if (target == 0) {
+            list.add(new ArrayList<Integer>(temp));
+            return;
+        } else if (index == array.length) {
+            return;
+        }
+        
+        int size = temp.size();
+        // state 1: add array[index]'s'
+        for (int i = target / array[index]; i > 0; i--) {
+            temp.add(array[index]);
+            target -= array[index];
+            recursion(temp, array, index + 1, target, list);
+        }
+        for (int i = temp.size() - 1; i >= size; i--) {
+            target += temp.remove(i);
+        }
+        // state 2: add 0 array[index]
+        recursion(temp, array, index + 1, target, list);
+    }
+}
