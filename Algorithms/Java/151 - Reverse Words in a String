@@ -1,0 +1,62 @@
+/*
+Given an input string, reverse the string word by word.
+
+For example,
+Given s = "the sky is blue",
+return "blue is sky the".
+
+Clarification:
+What constitutes a word?
+A sequence of non-space characters constitutes a word.
+Could the input string contain leading or trailing spaces?
+Yes. However, your reversed string should not contain leading or trailing spaces.
+How about multiple spaces between two words?
+Reduce them to a single space in the reversed string.
+*/
+
+public class Solution {
+    public String reverseWords(String s) {
+        if (s == null || s.length() == 0) {
+            return s;
+        }
+        char[] ar = s.toCharArray();
+        int start = 0, end;
+        end = formatCharArray(ar); // remove extra spaces
+        if (start > end) {  // no word found
+            return "";
+        }
+        int i = start, j = start;
+        while (j <= end) {
+            if (ar[j] == ' ') {
+                reverse(ar, i, j - 1);  // reverse each word
+                i = j + 1;
+            }
+            j++;
+        }
+        reverse(ar, i, j - 1);  // reverse last word
+        reverse(ar, start, end);    // reverse all words
+        return new String(ar, start, end + 1);
+    }
+    
+    private int formatCharArray(char[] ar) {
+        int i = -1;
+        for (int j = 0; j < ar.length; j++) {
+            if (ar[j] != ' ' || (j > 0 && ar[j - 1] != ' ')) {
+                ar[++i] = ar[j];
+            }
+        }
+        return i >= 0 && ar[i] == ' ' ? i - 1 : i;
+    }
+    
+    private void reverse(char[] ar, int i, int j) {
+        if (i == j) {
+            return;
+        }
+        char tmp = 0;
+        while (i < j) {
+            tmp = ar[i];
+            ar[i++] = ar[j];
+            ar[j--] = tmp;
+        }
+    }
+}
