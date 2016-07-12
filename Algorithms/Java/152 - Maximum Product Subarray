@@ -7,8 +7,8 @@ the contiguous subarray [2,3] has the largest product = 6.
 
 public class Solution {
     public int maxProduct(int[] nums) {
-        return constantSpaceDP(nums);
-        //return nSpaceDP(nums);
+        //return constantSpaceDP(nums);
+        return nSpaceDP(nums);
     }
     /*
         definition: M[0][i] = the max product of contiguous subarray ending at ar[i]
@@ -23,14 +23,13 @@ public class Solution {
         int mx = ar[0], mn = ar[0];
         int posTmp = 1, negTmp = 1, res = ar[0];
         for (int i = 1; i < ar.length; i++) {
-            posTmp = Math.max(mx, 1);
-            negTmp = Math.min(mn, 1);
             if (ar[i] > 0) {
-                mx = ar[i] * posTmp;
-                mn = ar[i] * negTmp;
+                mx = ar[i] * Math.max(mx, 1);
+                mn = ar[i] * Math.min(mn, 1);
             } else {
-                mx = ar[i] * negTmp;
-                mn = ar[i] * posTmp;
+                int temp = mx;
+                mx = ar[i] * Math.min(mn, 1);
+                mn = ar[i] * Math.max(temp, 1);
             }
             res = Math.max(res, mx);
         }
@@ -39,12 +38,15 @@ public class Solution {
     private int nSpaceDP(int[] ar) {
         int[][] M = new int[2][ar.length];
         M[0][0] = M[1][0] = ar[0];
-        int posTmp = 1, negTmp = 1, res = ar[0];
+        int res = ar[0];
         for (int i = 1; i < ar.length; i++) {
-            posTmp = Math.max(M[0][i - 1], 1);
-            negTmp = Math.min(M[1][i - 1], 1);
-            M[0][i] = ar[i] * (ar[i] > 0 ? posTmp : negTmp);
-            M[1][i] = ar[i] * (ar[i] < 0 ? posTmp : negTmp);
+            if (ar[i] > 0) {
+                M[0][i] = ar[i] * Math.max(M[0][i - 1], 1);
+                M[1][i] = ar[i] * Math.min(M[1][i - 1], 1);
+            } else {
+                M[0][i] = ar[i] * Math.min(M[1][i - 1], 1);
+                M[1][i] = ar[i] * Math.max(M[0][i - 1], 1);
+            }
             res = Math.max(res, M[0][i]);
         }
         return res;
