@@ -1,0 +1,31 @@
+/*
+Follow up for H-Index: What if the citations array is sorted in ascending order? Could you optimize your algorithm?
+
+Hint:
+
+Expected runtime complexity is in O(log n) and the input is sorted.
+*/
+
+public class Solution {
+    public int hIndex(int[] citations) {
+        if (citations == null || citations.length == 0) {
+            return 0;
+        }
+        return binarySearch(citations);
+    }
+    // (0, left) are not valid, [left, len) are not tested
+    // (0, right] are not tested, (right, len) are valid
+    // terminate when left > right, left points at first valid position
+    private int binarySearch(int[] citations) {
+        int left = 0, right = citations.length - 1, mid;
+        while (left <= right) {
+            mid = left + (right - left) / 2;
+            if (citations[mid] >= citations.length - mid) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return citations.length - left;
+    }
+}
