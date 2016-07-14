@@ -1,0 +1,64 @@
+/*
+Given a string containing only digits, restore it by returning all possible valid IP address combinations.
+
+For example:
+Given "25525511135",
+
+return ["255.255.11.135", "255.255.111.35"]. (Order does not matter)
+*/
+
+public class Solution {
+    public List<String> restoreIpAddresses(String s) {
+        List<String> list = new ArrayList<>();
+        if (s == null) {
+            return list;
+        }
+        recursion(new StringBuilder(), 3, 0, s, list);
+        return list;
+    }
+    
+    private void recursion(StringBuilder sb, int remain, int index, String s, List<String> list) {
+        if (s.length() - index < remain + 1 || s.length() - index > 4 * (remain + 1)) {
+            return;
+        } else if (remain == 0) {
+            int pos = sb.length();  // mark current position
+            int num = 0;
+            sb.append('.');
+            while (index < s.length()) {
+                int dig = s.charAt(index) - '0';
+                sb.append(dig); // in case num is 025 -> 25
+                num = num * 10 + dig;
+                index++;
+                if (num == 0) { // 1st num is 0, break, because 010 is not valid
+                    break;
+                }
+            }
+            if (index == s.length() && num <= 255) {
+                list.add(sb.toString());
+            }
+            sb.delete(pos, sb.length());
+            return;
+        }
+        
+        int pos = sb.length();  // mark current position
+        int num = 0, bound = Math.min(s.length() - remain, index + 3);
+        if (remain != 3) {  // skip heading '.'
+            sb.append('.');
+        }
+        
+        while (index < bound) {
+            int dig = s.charAt(index) - '0';
+            sb.append(dig); // in case num is 025 -> 25
+            num = num * 10 + dig;
+            if (num <= 255) {
+                recursion(sb, remain - 1, index + 1, s, list);
+            }
+            index++;
+            if (num == 0) { // 1st num is 0, break, because 010 is not valid
+                break;
+            }
+        }
+        
+        sb.delete(pos, sb.length());
+    }
+}
