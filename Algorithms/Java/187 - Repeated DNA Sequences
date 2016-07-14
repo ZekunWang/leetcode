@@ -1,0 +1,52 @@
+/*
+All DNA is composed of a series of nucleotides abbreviated as A, C, G, and T, 
+for example: "ACGAATTCCG". When studying DNA, it is sometimes useful to identify repeated sequences within the DNA.
+
+Write a function to find all the 10-letter-long sequences (substrings) that occur more than once in a DNA molecule.
+
+For example,
+Given s = "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT",
+
+Return:
+["AAAAACCCCC", "CCCCCAAAAA"].
+*/
+
+public class Solution {
+    public List<String> findRepeatedDnaSequences(String s) {
+        List<String> list = new ArrayList<>();
+        withHashCode(s, list);
+        return list;
+    }
+    // O(n) time, O(n) set + O(1) dict array = O(n) space
+    private void withHashCode(String s, List<String> list) {
+        if (s.length() < 10) {
+            return;
+        }
+        Set<Integer> once = new HashSet<>();
+        Set<Integer> twice = new HashSet<>();
+        int[] dict = new int[26];
+        dict['C' - 'A'] = 1;
+        dict['G' - 'A'] = 2;
+        dict['T' - 'A'] = 3;
+        
+        int code = 0;
+        for (int i = 0; i < 9; i++) {
+            // add new char
+            code <<= 2;
+            code |= dict[s.charAt(i) - 'A'];
+        }
+        for (int i = 9; i < s.length(); i++) {
+            // delete oldest char
+            code <<= 2;
+            code &= 0xfffff;
+            
+            // add new char
+            code |= dict[s.charAt(i) - 'A'];
+            
+            // add chars to map
+            if (!once.add(code) && twice.add(code)) {
+                list.add(s.substring(i - 9, i + 1));
+            }
+        }
+    }
+}
