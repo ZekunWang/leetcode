@@ -1,0 +1,132 @@
+/*
+The set [1,2,3,…,n] contains a total of n! unique permutations.
+
+By listing and labeling all of the permutations in order,
+We get the following sequence (ie, for n = 3):
+
+"123"
+"132"
+"213"
+"231"
+"312"
+"321"
+Given n and k, return the kth permutation sequence.
+
+Note: Given n will be between 1 and 9 inclusive.
+*/
+
+public class Solution {
+    public String getPermutation(int n, int k) {
+        if (n < 1 || k < 1) {
+            return "";
+        }
+        return withList(n, k);
+        //return withLinkedList(n, k);
+    }
+    
+    // O(n^2) time, O(n) space
+    private String withList(int n, int k) {
+        // create array
+        List<Integer> list = initList(n);
+        // calculate product
+        int product = getProduct(n);
+        if (k > product) {
+            return "";
+        }
+        
+        k--;    // k starts from 0!!!!
+        // keep picking node and append to sb
+        StringBuilder sb = new StringBuilder();
+        while (k > 0) {
+            product /= n--; // get !(n - 1)
+            // get node from list
+            int index = k / product;
+            sb.append(list.get(index));
+            list.remove(index);
+            
+            k %= product;   // get remaining k to reorder
+        }
+        
+        // append remaining nums to sb
+        for (int num : list) {
+            sb.append(num);
+        }
+        
+        return sb.toString();
+    }
+    
+    // O(n^2) time, O(n) space
+    private String withLinkedList(int n, int k) {
+        // create linked list
+        ListNode dummy = initListNode(n);
+        // calculate product
+        int product = getProduct(n);
+        if (k > product) {
+            return "";
+        }
+        
+        k--;    // k starts from 0!!!!
+        // keep picking node and append to sb
+        StringBuilder sb = new StringBuilder();
+        while (k > 0) {
+            product /= n--; // get !(n - 1)
+            // get node from list
+            sb.append(getNode(dummy, k / product).val);
+            
+            k %= product;   // get remaining k to reorder
+        }
+        
+        // append remaining nums to sb
+        ListNode cur = dummy.next;
+        while (cur != null) {
+            sb.append(cur.val);
+            cur = cur.next;
+        }
+        
+        return sb.toString();
+    }
+    
+    private List<Integer> initList(int n) {
+        List<Integer> list = new ArrayList<>();
+        for (int i = 1; i <= n; i++) {
+            list.add(i);
+        }
+        return list;
+    }
+    
+    private ListNode initListNode(int n) {
+        ListNode dummy = new ListNode(0), cur = dummy;
+        for (int i = 1; i <= n; i++) {
+            ListNode node = new ListNode(i);
+            cur.next = node;
+            cur = node;
+        }
+        return dummy;
+    }
+    
+    private int getProduct(int n) {
+        int product = 1;
+        for (int i = 1; i <= n; i++) {
+            product *= i;
+        }
+        return product;
+    }
+    
+    private ListNode getNode(ListNode dummy, int index) {
+        ListNode cur = dummy, node;
+        while (index-- > 0) {
+            cur = cur.next;
+        }
+        node = cur.next;
+        cur.next = node.next;
+        return node;
+    }
+    
+    private class ListNode {
+        int val;
+        ListNode next;
+        public ListNode(int val) {
+            this.val = val;
+        }
+    }
+}
