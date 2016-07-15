@@ -1,0 +1,41 @@
+/*
+Compare two version numbers version1 and version2.
+If version1 > version2 return 1, if version1 < version2 return -1, otherwise return 0.
+
+You may assume that the version strings are non-empty and contain only digits and the . character.
+The . character does not represent a decimal point and is used to separate number sequences.
+For instance, 2.5 is not "two and a half" or "half way to version three", it is the fifth second-level 
+revision of the second first-level revision.
+
+Here is an example of version numbers ordering:
+
+0.1 < 1.1 < 1.2 < 13.37
+*/
+
+public class Solution {
+    public int compareVersion(String version1, String version2) {
+        int[] idx1 = new int[]{0}, idx2 = new int[]{0};
+        int num1 = 0, num2 = 0;
+        while (idx1[0] < version1.length() || idx2[0] < version2.length()) {
+            num1 = getNum(version1, idx1);
+            num2 = getNum(version2, idx2);
+            if (num1 != num2) {
+                return num1 > num2 ? 1 : -1;
+            }
+        }
+        return 0;
+    }
+    
+    private int getNum(String s, int[] idx) {
+        int res = 0;
+        char ch = 0;
+        while (idx[0] < s.length()) {
+            ch = s.charAt(idx[0]++);
+            if (ch == '.') {
+                return res;
+            }
+            res = res * 10 + ch - '0';
+        }
+        return res;
+    }
+}
