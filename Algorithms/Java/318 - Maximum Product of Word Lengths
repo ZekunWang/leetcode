@@ -1,0 +1,113 @@
+/*
+Given a string array words, find the maximum value of length(word[i]) * length(word[j]) where the 
+two words do not share common letters. You may assume that each word will contain only lower case letters. 
+If no such two words exist, return 0.
+
+Example 1:
+Given ["abcw", "baz", "foo", "bar", "xtfn", "abcdef"]
+Return 16
+The two words can be "abcw", "xtfn".
+
+Example 2:
+Given ["a", "ab", "abc", "d", "cd", "bcd", "abcd"]
+Return 4
+The two words can be "ab", "cd".
+
+Example 3:
+Given ["a", "aa", "aaa", "aaaa"]
+Return 0
+No such pair of words.
+*/
+
+public class Solution {
+    public int maxProduct(String[] words) {
+        if (words == null || words.length < 2) {
+            return 0;
+        }
+        // sort array by length in decending order
+        Arrays.sort(words, new Comparator<String>(){
+            @Override
+            public int compare(String s1, String s2) {
+                if (s1.length() == s2.length()) {
+                    return 0;
+                }
+                return s1.length() > s2.length() ? -1 : 1;
+            }
+        });
+        int[] binary = new int[words.length];
+        for (int i = 0; i < words.length; i++) {
+            for (int j = 0; j < words[i].length(); j++) {
+                binary[i] |= 1 << (words[i].charAt(j) - 'a');
+            }
+        }
+        //return withHeap(words, binary);
+        return withForForLoop(words, binary);
+    }
+    // time: O(n*logn) + O(m * n) + O(n^2 * log(n^2)) = O(n^2 * logn)
+    private int withHeap(String[] words, int[] binary) {
+        Set<Pair> set = new HashSet<>();
+        PriorityQueue<Pair> heap = new PriorityQueue<>(words.length * words.length, new Comparator<Pair>(){
+            @Override
+            public int compare(Pair pr1, Pair pr2) {
+                if (pr1.product == pr2.product) {
+                    return 0;
+                }
+                return pr1.product > pr2.product ? -1 : 1;
+            }
+        });
+        Pair pair = new Pair(words[0].length() * words[1].length(), 0, 1);
+        heap.offer(pair);
+        set.add(pair);
+        while (!heap.isEmpty()) {
+            pair = heap.poll();
+            if ((binary[pair.p1] & binary[pair.p2]) == 0) {
+                return pair.product;
+            }
+            Pair pr = null;
+            if (pair.p1 + 1 != pair.p2) {
+                pr = new Pair(words[pair.p1 + 1].length() * words[pair.p2].length(), pair.p1 + 1, pair.p2);
+                if (set.add(pr)) {
+                    heap.offer(pr);
+                }
+            }
+            if (pair.p2 + 1 < words.length) {
+                pr = new Pair(words[pair.p1].length() * words[pair.p2 + 1].length(), pair.p1, pair.p2 + 1);
+                if (set.add(pr)) {
+                    heap.offer(pr);
+                }
+            }
+        }
+        return 0;
+    }
+    
+    private class Pair {
+        int product, p1, p2;
+        public Pair(int product, int p1, int p2) {
+            this.product = product;
+            this.p1 = p1;
+            this.p2 = p2;
+        }
+        @Override
+        public boolean equals(Object obj) {
+            Pair pair = (Pair)obj;
+            return product == pair.product && p1 == pair.p1 && p2 == pair.p2;
+        }
+        @Override
+        public int hashCode() {
+            return p1 * 31 + p2;
+        }
+    }
+    
+    // time: O(m*n) + O(n^2) = O(n^2), space: O(n) for preprocessing
+    private int withForForLoop(String[] words, int[] binary) {
+        int max = 0;
+        for (int i = 0; i < words.length - 1; i++) {
+            for (int j = i + 1; j < words.length; j++) {
+                if ((binary[i] & binary[j]) == 0) {
+                    max = Math.max(max, words[i].length() * words[j].length());
+                }
+            }
+        }
+        return max;
+    }
+}
