@@ -1,0 +1,108 @@
+/*
+Merge k sorted linked lists and return it as one sorted list. Analyze and describe its complexity.
+*/
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        if (lists == null || lists.length == 0) {
+            return null;
+        }
+        return binaryReduction(lists);
+        //return minHeap(lists);
+        //return primitive(lists);
+    }
+    /*
+        use binary reduction to merger every two lists, there will be logk rounds
+        time: O(kn * logk), space: O(k) for the queue OR O(1) with input array
+    */
+    private ListNode binaryReduction(ListNode[] lists) {
+        // use input array to store temp lists rather than using a queue
+        for (int step = 1; step < lists.length; step <<= 1) {
+            for (int i = 0; i + step < lists.length; i += 2 * step) {   // stops when 0 or 1 list unmerged
+                lists[i] = merge(lists[i], lists[i + step]);
+            }
+        }
+        return lists[0];
+    }
+    
+    /*
+        use min-heap to order k lists, pick min node each time, add to result list, and push next node to heap
+        time: O(kn * logk), space: O(k);
+    */
+    private ListNode minHeap(ListNode[] lists) {
+        PriorityQueue<ListNode> minHeap = new PriorityQueue<>(lists.length, new Comparator<ListNode>(){
+            @Override
+            public int compare(ListNode one, ListNode two) {
+                if (one.val == two.val) {
+                    return 0;
+                }
+                return one.val < two.val ? -1 : 1;
+            }
+        });
+        for (ListNode head : lists) {
+            if (head != null) {
+                minHeap.offer(head);
+            }
+        }
+        ListNode dummy = new ListNode(0), current = dummy, next;
+        while (!minHeap.isEmpty()) {
+            next = minHeap.poll();
+            current.next = next;
+            current = next;
+            if (next.next != null) {
+                minHeap.offer(next.next);
+            }
+        }
+        return dummy.next;
+    }
+    
+    /*
+        primitive solution: merge each list one by one
+        time: O(k^2 * n), space: O(1);
+    */
+    private ListNode primitive(ListNode[] lists) {
+        ListNode result = lists[0];
+        for (int i = 1; i < lists.length; i++) {
+            result = merge(result, lists[i]);
+        }
+        return result;
+    }
+    
+    private ListNode merge(ListNode one, ListNode two) {
+        if (one == null) {
+            return two;
+        } else if (two == null) {
+            return one;
+        }
+        ListNode dummy = new ListNode(0), current = dummy;
+        while (one != null && two != null) {
+            if (one.val < two.val) {
+                current.next = one;
+                one = one.next;
+            } else {
+                current.next = two;
+                two = two.next;
+            }
+            current = current.next;
+        }
+        while (one != null) {
+            current.next = one;
+            one = one.next;
+            current = current.next;
+        }
+        while (two != null) {
+            current.next = two;
+            two = two.next;
+            current = current.next;
+        }
+        return dummy.next;
+    }
+}
