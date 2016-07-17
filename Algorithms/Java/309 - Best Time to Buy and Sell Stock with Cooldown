@@ -20,28 +20,41 @@ public class Solution {
         }
         return constantSpaceDP(prices);
         //return solution1(prices);
-    }
-        
-/*
-    buy[i]: max profit when have brought upon p[i]
-    sell[i]: max profit when has sold upon p[i]
+
     
-    buy[i] = max(buy[i - 1], sell[i - 2] - p[i])    // use sell[i - 2], need one day of cooldown
-    sell[i] = max(sell[i - 1], buy[i - 1] + p[i])
+    /*
+        buy[i]: max profit we can get when we have a stock upon day i
+        sell[i]: max profit we can get when we don't have a stck upon day i
+        sell[i] = max(sell[i - 1], buy[i - 1] + price[i])
+        buy[i] = max(buy[i - 1], sell[i - 2] - price[i])
+        buy[0] = -price[0];
+        sell[0] = 0
+        complexity: time: O(n), space: O(n)
+        optimizetion: space: O(n) -> O(1)
+    */
     
-    optimization: space O(2n) -> O(2)
-*/
-    private int constantSpaceDP(int[] p) {
-        int preSell = 0, sell = 0, buy = Integer.MIN_VALUE, tmp;
-        for (int i = 0; i < p.length; i++) {
+    private int constantDP(int[] prices) {
+        int buy = Integer.MIN_VALUE, sell = 0, psell = 0, tmp;
+        for (int price : prices) {
             tmp = buy;
-            buy = Math.max(buy, preSell - p[i]);    // buy[i] = max(buy[i - 1], sell[i - 2] - p[i])
-            preSell = sell; // sell[i - 2] = sell[i - 1]
-            sell = Math.max(sell, tmp + p[i]);  // sell[i] = max(sell[i - 1], buy[i - 1] + p[i])
+            buy = Math.max(buy, psell - price);    // buy[i] = max(buy[i - 1], sell[i - 2] - p[i])
+            psell = sell; // sell[i - 2] = sell[i - 1]
+            sell = Math.max(sell, tmp + price);    // sell[i] = max(sell[i - 1], buy[i - 1] + p[i])
         }
         return sell;
     }
-
+    
+    private int linearDP(int[] prices) {
+        int[] buy = new int[prices.length];
+        int[] sell = new int[prices.length];
+        buy[0] = -prices[0];
+        for (int i = 1; i < prices.length; i++) {
+            sell[i] = Math.max(sell[i - 1], buy[i - 1] + prices[i]);
+            buy[i] = Math.max(buy[i - 1], (i < 2 ? 0 : sell[i - 2]) - prices[i]);
+        }
+        return sell[prices.length - 1];
+    }
+    
 /*
 你可以这样考虑，当你在day i的时候，现在为止的状态分别可能是什么？
 0. 完成了前面的transaction - 现在身上没有股票
