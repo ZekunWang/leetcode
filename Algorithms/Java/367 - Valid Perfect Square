@@ -1,0 +1,63 @@
+/*
+Given a positive integer num, write a function which returns True if num is a perfect square else False.
+
+Note: Do not use any built-in library function such as sqrt.
+
+Example 1:
+
+Input: 16
+Returns: True
+Example 2:
+
+Input: 14
+Returns: False
+*/
+
+public class Solution {
+    public boolean isPerfectSquare(int num) {
+        return solution3(num);
+        //return solution2(num);
+        //return solution1(num);
+    }
+    /*
+        a square num is from by 1 + 3 + 5 ...
+        time: O(n^0.5), space: O(1)
+    */
+    private boolean solution3(int num) {
+        int i = 1;
+        while (num > 0) {
+            num -= i;
+            i += 2;
+        }
+        return num == 0;
+    }
+    
+    /*
+        traverse from 1 to sqrt(num)
+        time: O(n^0.5), space: O(1)
+    */
+    private boolean solution2(int num) {
+        for (long i = 1; i * i <= num; i++) {
+            if (i * i == num) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /*
+        use solution from 069 - Sqrt(x), compare res * res == num
+        time: O(16) = O(1), space: O(1)
+    */
+    private boolean solution1(int num) {
+        int root = 0, bit = 1 << 15;
+        while (bit > 0) {
+            root |= bit;
+            if (root > num / root) {    // if root * root > num
+                root ^= bit;    // set the bit back to 0
+            }
+            bit >>= 1;
+        }
+        return root * root == num;
+    }
+}
