@@ -1,0 +1,70 @@
+/*
+Convert a non-negative integer to its english words representation. Given input is guaranteed to be less than 231 - 1.
+
+For example,
+123 -> "One Hundred Twenty Three"
+12345 -> "Twelve Thousand Three Hundred Forty Five"
+1234567 -> "One Million Two Hundred Thirty Four Thousand Five Hundred Sixty Seven"
+Hint:
+
+Did you see a pattern in dividing the number into chunk of words? For example, 123 and 123000.
+Group the number by thousands (3 digits). You can write a helper function that takes a number less than 1000 
+and convert just that chunk to words.
+There are many edge cases. What are some good test cases? Does your code work with input such as 0? Or 1000010? 
+(middle chunk is zero and should not be printed out)
+*/
+
+public class Solution {
+    static String[] chunk = new String[]{"", "Thousand ", "Million ", "Billion "};
+    static String[] ones = new String[]{"", "One ", "Two ", "Three ", "Four ", "Five ", "Six ", "Seven ", "Eight ", 
+    "Nine ", "Ten ", "Eleven ", "Twelve ", "Thirteen ", "Fourteen ", "Fifteen ", "Sixteen ", "Seventeen ", "Eighteen ", "Nineteen "};
+    static String[] tens = new String[]{"", "", "Twenty ", "Thirty ", "Forty ", "Fifty ", "Sixty ", "Seventy ", "Eighty ", "Ninety "};
+    public String numberToWords(int num) {
+        if (num == 0) {
+            return "Zero";
+        }
+        StringBuilder sb = new StringBuilder();
+        int[] len = new int[]{1}, mask = new int[]{1};
+        for (int i = num / 10; i > 0; i /= 10) {
+            len[0]++;
+            mask[0] *= 10;
+        }
+        for (int i = (len[0] - 1) / 3; i >= 0; i--) {
+            String s = getChunk(num, mask, len, i * 3);
+            if (s.length() > 0) {
+                sb.append(s).append(chunk[i]);
+            }
+        }
+        return sb.substring(0, sb.length() - 1);
+    }
+    
+    private String getChunk(int num, int[] mask, int[] len, int end) {
+        StringBuilder sb = new StringBuilder();
+        int dig = 0;
+        if (len[0] - end == 3) {
+            dig = num / mask[0] % 10;   // 100 ~ 900
+            if (dig > 0) {
+                sb.append(ones[dig]).append("Hundred ");
+            }
+            len[0]--;
+            mask[0] /= 10;
+        }
+        dig = 0;
+        if (len[0] - end == 2) {
+            dig = num / mask[0] % 10;
+            if (dig > 1) {
+                sb.append(tens[dig]);   // 20 ~ 90
+                dig = 0;
+            } else {
+                dig *= 10;              // 10 ~ 19
+            }
+            len[0]--;
+            mask[0] /= 10;
+        }
+        dig += num / mask[0] % 10;  // 0 ~ 9 OR 10 ~ 19
+        sb.append(ones[dig]);
+        len[0]--;
+        mask[0] /= 10;
+        return sb.toString();
+    }
+}
